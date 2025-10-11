@@ -39,7 +39,7 @@ export default function Screen2({ onBack }) {
                         resolve(false);
                     }
                 };
-                img.src = `http://200.200.200.1/probe.jpg?t=${Date.now()}`;
+                img.src = `http://floto.cam/probe.jpg?t=${Date.now()}`;
             });
         }
 
