@@ -17,13 +17,12 @@ export default function Connect() {
         signal: ctrl.signal,
       });
       clearTimeout(to);
-      return res.status === 204; // 204 = online
+      return res.status === 204; // online
     } catch {
       return false; // offline
     }
   }
 
-  // continuously update online status
   useEffect(() => {
     let active = true;
     async function loop() {
@@ -39,7 +38,6 @@ export default function Connect() {
     };
   }, []);
 
-  // react to checkbox changes
   useEffect(() => {
     async function evaluate() {
       const allChecked = checks.wifi && checks.portal;
@@ -48,6 +46,7 @@ export default function Connect() {
         setStatus("Waiting for connection...");
         return;
       }
+
       if (allChecked && !isOnline) {
         setTimeout(() => {
           setIsConnected(true);
@@ -58,8 +57,13 @@ export default function Connect() {
           setStatus(
             "⚠️ Connection problem. Forget the network “floto_cam” and retry the steps again"
           );
-          setChecks({ wifi: false, portal: false });
           setIsConnected(false);
+
+          // show the warning for 5 seconds, then reset
+          setTimeout(() => {
+            setChecks({ wifi: false, portal: false });
+            setStatus("Waiting for connection...");
+          }, 5000);
         }, 1000);
       }
     }
@@ -79,7 +83,9 @@ export default function Connect() {
           alt="Wi-Fi instructions"
           style={styles.img}
         />
-        <p style={styles.intro}>Check the following steps after you complete them:</p>
+        <p style={styles.intro}>
+          Check the following steps after you complete them:
+        </p>
         <ul style={styles.list}>
           <li style={styles.item}>
             <label style={styles.label}>
@@ -88,7 +94,8 @@ export default function Connect() {
                 checked={checks.wifi}
                 onChange={() => toggle("wifi")}
               />{" "}
-              Go to your Wi-Fi settings and select the Wi-Fi: <b>floto_cam</b>.
+              1. Go to your Wi-Fi settings and select the Wi-Fi:{" "}
+              <b>floto_cam</b>.
             </label>
           </li>
           <li style={styles.item}>
@@ -98,8 +105,8 @@ export default function Connect() {
                 checked={checks.portal}
                 onChange={() => toggle("portal")}
               />{" "}
-              <b>Wait 5–10 s for a captive portal to launch.</b> Then, tap “Cancel” → “Use without
-              Internet”.
+              2. <b>Wait 5–10 s for a captive portal to launch.</b> Then, tap
+              “Cancel” → “Use without Internet”.
             </label>
           </li>
         </ul>
