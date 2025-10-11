@@ -62,11 +62,11 @@ export default function Connect() {
 
     async function run() {
       // Phase 1: keep pinging the internet until it goes offline
-    //   while (active) {
-    //     const online = await pingInternetOnce(1000);
-    //     if (!online) break;
-    //     await new Promise((r) => setTimeout(r, 1000));
-    //   }
+      while (active) {
+        const online = await pingInternetOnce(1000);
+        if (!online) break;
+        await new Promise((r) => setTimeout(r, 1000));
+      }
 
       // Phase 2: once offline, keep probing the Pi until reachable
       while (active) {
