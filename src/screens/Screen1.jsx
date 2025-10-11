@@ -16,7 +16,7 @@ export default function Screen1({ onNext }) {
 
           const res = await fetch(`${probe}?t=${Date.now()}`, {
             method: "GET",
-            mode: "cors",
+            mode: "no-cors",
             signal: ctrl.signal,
           });
           clearTimeout(timeout);
