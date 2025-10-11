@@ -93,6 +93,7 @@ export default function Connect() {
                 type="checkbox"
                 checked={checks.wifi}
                 onChange={() => toggle("wifi")}
+                style={styles.checkbox}
               />{" "}
               1. Go to your Wi-Fi settings and select the Wi-Fi:{" "}
               <b>floto_cam</b>.
@@ -104,6 +105,7 @@ export default function Connect() {
                 type="checkbox"
                 checked={checks.portal}
                 onChange={() => toggle("portal")}
+                style={styles.checkbox}
               />{" "}
               2. <b>Wait 5–10 s for a captive portal to launch.</b> Then, tap
               “Cancel” → “Use without Internet”.
@@ -159,6 +161,20 @@ const styles = {
   list: { listStyle: "none", padding: 0, margin: 0 },
   item: { margin: "8px 0" },
   label: { cursor: "pointer", lineHeight: 1.5 },
+  checkbox: {
+    appearance: "none",
+    WebkitAppearance: "none",
+    MozAppearance: "none",
+    width: 18,
+    height: 18,
+    border: "1.5px solid #ccc",
+    borderRadius: 4,
+    background: "#fff",
+    display: "inline-block",
+    verticalAlign: "middle",
+    position: "relative",
+    marginRight: 6,
+  },
   status: { color: "#444", fontSize: 14, textAlign: "center", marginTop: 12 },
   ctaRow: { display: "grid", placeItems: "center", marginTop: 16 },
   btn: {
@@ -171,3 +187,24 @@ const styles = {
     minWidth: 220,
   },
 };
+
+// add a small CSS injection to display the check mark
+const styleTag = document.createElement("style");
+styleTag.innerHTML = `
+input[type="checkbox"][style]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 9px;
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+input[type="checkbox"][style]:checked::after {
+  opacity: 1;
+}
+`;
+document.head.appendChild(styleTag);
