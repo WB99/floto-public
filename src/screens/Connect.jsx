@@ -72,7 +72,7 @@ export default function Connect() {
     <main style={styles.wrap}>
       <section style={styles.card}>
         <div style={styles.inner}>
-          <h2 style={styles.h2}>Connect to Camera</h2>
+          <h2 style={styles.h2}>📷 Connect to Camera</h2>
 
           <div style={styles.imgBox}>
             <img
@@ -147,8 +147,8 @@ const styles = {
     color: "#000",
   },
   card: {
-    width: "92vw",
-    height: "88vh",
+    width: "94vw",
+    height: "92vh",
     background: "#fff",
     color: "#000",
     borderRadius: 20,
@@ -162,14 +162,15 @@ const styles = {
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
-    padding: "4vw",
+    justifyContent: "flex-start",
+    padding: "5vw",
     boxSizing: "border-box",
     color: "#000",
   },
   h2: {
-    fontSize: "clamp(20px, 4vw, 26px)",
+    fontSize: "clamp(22px, 5vw, 30px)",
     margin: 0,
+    marginBottom: "1.5vh",
     textAlign: "left",
     color: "#000",
   },
@@ -179,11 +180,13 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: "2.5vh",
+    paddingBottom: "1vh",
   },
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "32vh",
+    maxHeight: "46vh",
     objectFit: "contain",
     borderRadius: 12,
     border: "1px solid #eee",
@@ -192,80 +195,82 @@ const styles = {
     flex: "1 1 auto",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     textAlign: "left",
     color: "#000",
+    marginTop: "1vh",
   },
   intro: {
-    fontWeight: 500,
-    fontSize: "clamp(13px, 3vw, 15px)",
-    marginBottom: "2vw",
+    fontWeight: 600,
+    fontSize: "clamp(15px, 3.6vw, 17px)",
+    marginBottom: "3vw",
     color: "#000",
   },
   list: { listStyle: "none", padding: 0, margin: 0, color: "#000" },
-  item: { margin: "1.6vw 0" },
+  item: { margin: "2vw 0" },
   label: {
     cursor: "pointer",
-    lineHeight: 1.5,
-    fontSize: "clamp(13px, 3vw, 15px)",
+    lineHeight: 1.6,
+    fontSize: "clamp(15px, 3.6vw, 17px)",
     color: "#000",
   },
   checkbox: {
     appearance: "none",
     WebkitAppearance: "none",
     MozAppearance: "none",
-    width: 18,
-    height: 18,
-    border: "1.5px solid #ccc",
-    borderRadius: 4,
+    width: 20,
+    height: 20,
+    border: "1.8px solid #ccc",
+    borderRadius: 5,
     background: "#fff",
     display: "inline-block",
     verticalAlign: "middle",
     position: "relative",
-    marginRight: 6,
+    marginRight: 8,
   },
   status: {
     marginTop: "3vh",
     textAlign: "center",
     color: "#444",
-    fontSize: "clamp(13px, 2.8vw, 15px)",
+    fontSize: "clamp(15px, 3.4vw, 17px)",
   },
   ctaColumn: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    gap: "2.5vh",
-    color: "#000",
+    justifyContent: "flex-start", // pushes elements upward
+    gap: "2.2vh",
+    marginTop: "1vh", // slightly higher in card area
+    height: "25vh", // defines the block to hold them roughly mid-screen
   },
   statusConnected: {
     color: "#000",
-    fontSize: "clamp(14px, 3vw, 16px)",
-    fontWeight: 500,
+    fontSize: "clamp(16px, 3.6vw, 18px)",
+    fontWeight: 600,
     textAlign: "center",
   },
   btn: {
-    padding: "12px 18px",
+    padding: "14px 22px",
     border: 0,
-    borderRadius: 8,
+    borderRadius: 10,
     background: "#000",
-    color: "#fff", // keep text white for contrast
+    color: "#fff",
     cursor: "pointer",
-    minWidth: 200,
-    fontSize: "clamp(14px, 3vw, 16px)",
+    minWidth: 220,
+    fontSize: "clamp(16px, 3.8vw, 18px)",
   },
 };
 
-// add checkmark indicator for styled checkboxes
+// styled checkbox indicator
 const styleTag = document.createElement("style");
 styleTag.innerHTML = `
 input[type="checkbox"][style]::after {
   content: "";
   position: absolute;
   top: 2px;
-  left: 5px;
-  width: 4px;
-  height: 9px;
+  left: 6px;
+  width: 5px;
+  height: 10px;
   border: solid #000;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
@@ -275,7 +280,7 @@ input[type="checkbox"][style]:checked::after {
   opacity: 1;
 }
 * { color: #000 !important; }
-button, button * { color: #fff !important; } /* preserve white text inside black buttons */
+button, button * { color: #fff !important; }
 html, body { background: #fafafa !important; }
 `;
 document.head.appendChild(styleTag);
