@@ -58,8 +58,6 @@ export default function Connect() {
             "⚠️ Connection problem. Forget the network “floto_cam” and retry the steps again"
           );
           setIsConnected(false);
-
-          // show the warning for 5 seconds, then reset
           setTimeout(() => {
             setChecks({ wifi: false, portal: false });
             setStatus("Waiting for connection...");
@@ -77,54 +75,80 @@ export default function Connect() {
   return (
     <main style={styles.wrap}>
       <section style={styles.card}>
-        <h1 style={styles.h1}>Connect to Camera</h1>
-        <img
-          src="/assets/wifi.png"
-          alt="Wi-Fi instructions"
-          style={styles.img}
-        />
-        <p style={styles.intro}>
-          Check the following steps after you complete them:
-        </p>
-        <ul style={styles.list}>
-          <li style={styles.item}>
-            <label style={styles.label}>
-              <input
-                type="checkbox"
-                checked={checks.wifi}
-                onChange={() => toggle("wifi")}
-                style={styles.checkbox}
-              />{" "}
-              1. Go to your Wi-Fi settings and select the Wi-Fi:{" "}
-              <b>floto_cam</b>.
-            </label>
-          </li>
-          <li style={styles.item}>
-            <label style={styles.label}>
-              <input
-                type="checkbox"
-                checked={checks.portal}
-                onChange={() => toggle("portal")}
-                style={styles.checkbox}
-              />{" "}
-              2. <b>Wait 5–10 s for a captive portal to launch.</b> Then, tap
-              “Cancel” → “Use without Internet”.
-            </label>
-          </li>
-        </ul>
+        <h2 style={styles.h2}>Connect to Camera</h2>
 
-        <p style={styles.status}>{status}</p>
+        <div style={styles.imgBox}>
+          <img
+            src="/assets/wifi.png"
+            alt="Wi-Fi instructions"
+            style={styles.img}
+          />
+        </div>
 
-        {isConnected && (
-          <div style={styles.ctaRow}>
-            <button
-              onClick={() => window.open("http://floto.cam", "_blank")}
-              style={styles.btn}
-            >
-              Launch Camera App
-            </button>
+        <div style={styles.switcher}>
+          {/* Checklist section */}
+          <div
+            style={{
+              ...styles.sectionLayer,
+              opacity: isConnected ? 0 : 1,
+              pointerEvents: isConnected ? "none" : "auto",
+            }}
+          >
+            <p style={styles.intro}>
+              Check the following steps after you complete them:
+            </p>
+            <ul style={styles.list}>
+              <li style={styles.item}>
+                <label style={styles.label}>
+                  <input
+                    type="checkbox"
+                    checked={checks.wifi}
+                    onChange={() => toggle("wifi")}
+                    style={styles.checkbox}
+                  />{" "}
+                  1. Go to your Wi-Fi settings and select the Wi-Fi:{" "}
+                  <b>floto_cam</b>.
+                </label>
+              </li>
+              <li style={styles.item}>
+                <label style={styles.label}>
+                  <input
+                    type="checkbox"
+                    checked={checks.portal}
+                    onChange={() => toggle("portal")}
+                    style={styles.checkbox}
+                  />{" "}
+                  2. <b>Wait 5–10 s for a captive portal to launch.</b> Then,
+                  tap “Cancel” → “Use without Internet”.
+                </label>
+              </li>
+            </ul>
+
+            {/* Default status */}
+            <div style={styles.statusBox}>
+              <p style={styles.status}>{status}</p>
+            </div>
           </div>
-        )}
+
+          {/* Launch button section */}
+          <div
+            style={{
+              ...styles.sectionLayer,
+              opacity: isConnected ? 1 : 0,
+              pointerEvents: isConnected ? "auto" : "none",
+            }}
+          >
+            <div style={styles.ctaColumn}>
+              <p style={styles.statusConnected}>{status}</p>
+              <button
+                onClick={() => window.open("http://floto.cam", "_blank")}
+                style={styles.btn}
+              >
+                Launch Camera App
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );
@@ -133,29 +157,55 @@ export default function Connect() {
 const styles = {
   wrap: {
     minHeight: "100vh",
+    width: "100vw",
+    overflowX: "hidden",
     display: "grid",
     placeItems: "center",
     background: "#fafafa",
     fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-    padding: 16,
+    padding: "4vw",
+    boxSizing: "border-box",
   },
   card: {
-    width: "min(720px,92vw)",
+    position: "relative",
+    width: "100%",
+    maxWidth: 720,
     background: "#fff",
     color: "#000",
     borderRadius: 16,
     boxShadow: "0 8px 30px rgba(0,0,0,.06)",
-    padding: 24,
+    padding: "6vw",
+    boxSizing: "border-box",
+    overflow: "hidden",
   },
-  h1: { marginTop: 0, marginBottom: 12 },
+  h2: { marginTop: 0, marginBottom: 12 },
+  imgBox: {
+    width: "100%",
+    overflow: "hidden",
+    borderRadius: 12,
+  },
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "60vh",
-    borderRadius: 12,
+    display: "block",
     border: "1px solid #eee",
     marginBottom: 16,
     objectFit: "contain",
+  },
+  switcher: {
+    position: "relative",
+    minHeight: 230, // ensure room for both states
+    marginBottom: 8,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sectionLayer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    transition: "opacity 0.35s ease",
   },
   intro: { fontWeight: 500, marginBottom: 8 },
   list: { listStyle: "none", padding: 0, margin: 0 },
@@ -175,20 +225,47 @@ const styles = {
     position: "relative",
     marginRight: 6,
   },
-  status: { color: "#444", fontSize: 14, textAlign: "center", marginTop: 12 },
-  ctaRow: { display: "grid", placeItems: "center", marginTop: 16 },
+  statusBox: {
+    marginTop: 28, // increased spacing
+    marginBottom: 10,
+    width: "100%",
+    textAlign: "center",
+  },
+  status: {
+    color: "#444",
+    fontSize: 14,
+    textAlign: "center",
+  },
+  ctaColumn: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 18,
+    paddingTop: 8,
+    paddingBottom: 28, // adds safe spacing at bottom for mobile
+  },
+  statusConnected: {
+    color: "#444",
+    fontSize: 15,
+    fontWeight: 500,
+    textAlign: "center",
+  },
   btn: {
-    padding: "12px 18px",
+    padding: "14px 20px",
     border: 0,
     borderRadius: 8,
     background: "#000",
     color: "#fff",
     cursor: "pointer",
-    minWidth: 220,
+    minWidth: 240,
+    fontSize: 16,
+    display: "block",
+    margin: "0 auto",
   },
 };
 
-// add a small CSS injection to display the check mark
+// add checkmark indicator for styled checkboxes
 const styleTag = document.createElement("style");
 styleTag.innerHTML = `
 input[type="checkbox"][style]::after {
