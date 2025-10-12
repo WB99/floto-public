@@ -183,18 +183,19 @@ const styles = {
     width: "100%",
     overflow: "hidden",
     borderRadius: 12,
+    marginBottom: 16,
   },
   img: {
     width: "100%",
     height: "auto",
+    maxHeight: "45vh", // reduced to ~25% smaller visual footprint
     display: "block",
     border: "1px solid #eee",
-    marginBottom: 16,
     objectFit: "contain",
   },
   switcher: {
     position: "relative",
-    minHeight: 230, // ensure room for both states
+    minHeight: 230,
     marginBottom: 8,
     display: "flex",
     alignItems: "center",
@@ -226,8 +227,8 @@ const styles = {
     marginRight: 6,
   },
   statusBox: {
-    marginTop: 28, // increased spacing
-    marginBottom: 10,
+    marginTop: 28,
+    marginBottom: 40, // extra padding so text never clips
     width: "100%",
     textAlign: "center",
   },
@@ -243,7 +244,7 @@ const styles = {
     justifyContent: "center",
     gap: 18,
     paddingTop: 8,
-    paddingBottom: 28, // adds safe spacing at bottom for mobile
+    paddingBottom: 40, // added bottom padding for safe spacing
   },
   statusConnected: {
     color: "#444",
