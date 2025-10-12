@@ -174,29 +174,29 @@ const styles = {
     color: "#000",
     borderRadius: 16,
     boxShadow: "0 8px 30px rgba(0,0,0,.06)",
-    padding: "6vw",
+    padding: "8vw 6vw", // extra vertical padding
     boxSizing: "border-box",
-    overflow: "hidden",
+    overflow: "visible", // ensure text never clips
   },
-  h2: { marginTop: 0, marginBottom: 12 },
+  h2: { marginTop: 0, marginBottom: 16 },
   imgBox: {
     width: "100%",
     overflow: "hidden",
     borderRadius: 12,
-    marginBottom: 16,
+    marginBottom: 20,
   },
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "45vh", // reduced to ~25% smaller visual footprint
+    maxHeight: "38vh", // reduced size, 25% smaller
     display: "block",
     border: "1px solid #eee",
     objectFit: "contain",
   },
   switcher: {
     position: "relative",
-    minHeight: 230,
-    marginBottom: 8,
+    minHeight: 280, // more breathing room to prevent clipping
+    marginBottom: 12,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -228,7 +228,7 @@ const styles = {
   },
   statusBox: {
     marginTop: 28,
-    marginBottom: 40, // extra padding so text never clips
+    marginBottom: 60, // large padding so text never touches bottom edge
     width: "100%",
     textAlign: "center",
   },
@@ -243,8 +243,8 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     gap: 18,
-    paddingTop: 8,
-    paddingBottom: 40, // added bottom padding for safe spacing
+    paddingTop: 20,
+    paddingBottom: 60, // ensure enough bottom space for longer warning text
   },
   statusConnected: {
     color: "#444",
