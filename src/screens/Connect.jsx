@@ -134,12 +134,12 @@ export default function Connect() {
         <div style={styles.imgBox}>
           <div style={styles.imgRow}>
             <img
-              src="/assets/ios-wifi-1.png"
+              src="/assets/ios-wifi-1.jpg"
               alt="Wi-Fi step 1"
               style={styles.dualImg}
             />
             <img
-              src="/assets/ios-wifi-2.png"
+              src="/assets/ios-wifi-2.jpg"
               alt="Wi-Fi step 2"
               style={styles.dualImg}
             />
