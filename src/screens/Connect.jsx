@@ -192,6 +192,7 @@ export default function Connect() {
       <section style={styles.card}>
         <div style={styles.inner}>
           <h2 style={styles.h2}>📷 Connect to Camera</h2>
+          <p style={styles.subtext}>Select your OS</p>
 
           <div style={styles.segmentedWrapper}>
             <div style={styles.segmented}>
@@ -259,14 +260,20 @@ const styles = {
   h2: {
     fontSize: "clamp(22px, 5vw, 30px)",
     margin: 0,
-    marginBottom: "1.5vh",
     textAlign: "left",
     color: "#000",
+  },
+  subtext: {
+    fontSize: "clamp(14px, 3.6vw, 16px)",
+    color: "#666",
+    marginTop: "0.5vh",
+    marginBottom: "1.5vh",
+    textAlign: "left",
   },
   segmentedWrapper: {
     display: "flex",
     justifyContent: "center",
-    marginBottom: "2vh",
+    marginBottom: "1.2vh",
   },
   segmented: {
     display: "flex",
