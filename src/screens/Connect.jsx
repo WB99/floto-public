@@ -182,15 +182,15 @@ const styles = {
     width: "100vw",
     display: "flex",
     justifyContent: "center",
-    alignItems: "flex-start", // push up
+    alignItems: "flex-start",
     background: "#fafafa",
     fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
     color: "#000",
-    paddingTop: "4vh", // top margin
+    paddingTop: "2vh", // reduced top margin
   },
   card: {
     width: "94vw",
-    height: "min(94vh, 680px)", // extend slightly for symmetry
+    height: "min(88vh, 680px)", // reduced height to prevent overflow
     background: "#fff",
     color: "#000",
     borderRadius: 20,
@@ -205,20 +205,17 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    padding: "4vw",
+    padding: "3.5vw", // slightly reduced internal padding
     boxSizing: "border-box",
-    color: "#000",
   },
   h2: {
     fontSize: "clamp(20px, 4.5vw, 28px)",
     margin: 0,
     textAlign: "center",
-    color: "#000",
   },
   subtext: {
     fontSize: "clamp(12px, 3vw, 14px)",
     fontWeight: 700,
-    color: "#000",
     marginTop: "0.3vh",
     marginBottom: "0.6vh",
     textAlign: "center",
@@ -252,13 +249,13 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "0.8vh",
-    paddingBottom: "0.3vh",
+    paddingTop: "0.6vh",
+    paddingBottom: "0.2vh",
   },
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "52vh",
+    maxHeight: "50vh", // reduced slightly for full fit
     objectFit: "contain",
     borderRadius: 12,
     border: "1px solid #eee",
@@ -269,22 +266,19 @@ const styles = {
     flexDirection: "column",
     justifyContent: "flex-start",
     textAlign: "left",
-    color: "#000",
-    marginTop: "0.5vh",
+    marginTop: "0.4vh",
   },
   intro: {
     fontWeight: 700,
     fontSize: "clamp(14px, 3.4vw, 16px)",
     marginBottom: "2vw",
-    color: "#000",
   },
-  list: { listStyle: "none", padding: 0, margin: 0, color: "#000" },
-  item: { margin: "1.4vw 0" },
+  list: { listStyle: "none", padding: 0, margin: 0 },
+  item: { margin: "1.3vw 0" },
   label: {
     cursor: "pointer",
     lineHeight: 1.5,
     fontSize: "clamp(14px, 3.4vw, 16px)",
-    color: "#000",
   },
   checkbox: {
     appearance: "none",
@@ -304,7 +298,7 @@ const styles = {
     minHeight: 26,
     display: "grid",
     placeItems: "center",
-    marginTop: "1.6vh",
+    marginTop: "1.4vh",
   },
   status: {
     textAlign: "center",
@@ -317,7 +311,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: "1.4vh",
+    gap: "1.2vh",
     marginTop: "1vh",
   },
   statusConnected: {
