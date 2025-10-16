@@ -6,6 +6,7 @@ export default function Connect() {
   const [status, setStatus] = useState("Waiting for connection...");
   const [checks, setChecks] = useState({ wifi: false, portal: false });
   const [isOnline, setIsOnline] = useState(true);
+  const [platform, setPlatform] = useState("ios");
 
   async function pingInternetOnce(timeoutMs = 1000) {
     try {
@@ -68,20 +69,17 @@ export default function Connect() {
     setChecks((c) => ({ ...c, [key]: !c[key] }));
   }
 
-  return (
-    <main style={styles.wrap}>
-      <section style={styles.card}>
-        <div style={styles.inner}>
-          <h2 style={styles.h2}>📷 Connect to Camera</h2>
-
+  function renderInstructions() {
+    if (platform === "ios") {
+      return (
+        <>
           <div style={styles.imgBox}>
             <img
               src="/assets/wifi.png"
-              alt="Wi-Fi instructions"
+              alt="Wi-Fi instructions (iOS)"
               style={styles.img}
             />
           </div>
-
           <div style={styles.content}>
             {!isConnected ? (
               <>
@@ -128,6 +126,95 @@ export default function Connect() {
               </div>
             )}
           </div>
+        </>
+      );
+    } else if (platform === "android") {
+      return (
+        <>
+          <div style={styles.imgBox}>
+            <img
+              src="/assets/wifi.png"
+              alt="Wi-Fi instructions (Android)"
+              style={styles.img}
+            />
+          </div>
+          <div style={styles.content}>
+            {!isConnected ? (
+              <>
+                <p style={styles.intro}>
+                  Check the following steps after you complete them:
+                </p>
+                <ul style={styles.list}>
+                  <li style={styles.item}>
+                    <label style={styles.label}>
+                      <input
+                        type="checkbox"
+                        checked={checks.wifi}
+                        onChange={() => toggle("wifi")}
+                        style={styles.checkbox}
+                      />{" "}
+                      1. Android instructions placeholder – step 1.
+                    </label>
+                  </li>
+                  <li style={styles.item}>
+                    <label style={styles.label}>
+                      <input
+                        type="checkbox"
+                        checked={checks.portal}
+                        onChange={() => toggle("portal")}
+                        style={styles.checkbox}
+                      />{" "}
+                      2. Android instructions placeholder – step 2.
+                    </label>
+                  </li>
+                </ul>
+                <p style={styles.status}>{status}</p>
+              </>
+            ) : (
+              <div style={styles.ctaColumn}>
+                <p style={styles.statusConnected}>{status}</p>
+                <button
+                  onClick={() => window.open("http://floto.cam", "_blank")}
+                  style={styles.btn}
+                >
+                  Launch Camera App
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      );
+    }
+  }
+
+  return (
+    <main style={styles.wrap}>
+      <section style={styles.card}>
+        <div style={styles.inner}>
+          <h2 style={styles.h2}>📷 Connect to Camera</h2>
+
+          <div style={styles.segmented}>
+            <button
+              onClick={() => setPlatform("ios")}
+              style={{
+                ...styles.segment,
+                ...(platform === "ios" ? styles.activeSegment : {}),
+              }}
+            >
+              iOS
+            </button>
+            <button
+              onClick={() => setPlatform("android")}
+              style={{
+                ...styles.segment,
+                ...(platform === "android" ? styles.activeSegment : {}),
+              }}
+            >
+              Android
+            </button>
+          </div>
+
+          {renderInstructions()}
         </div>
       </section>
     </main>
@@ -173,6 +260,28 @@ const styles = {
     marginBottom: "1.5vh",
     textAlign: "left",
     color: "#000",
+  },
+  segmented: {
+    display: "flex",
+    width: "fit-content",
+    borderRadius: 12,
+    border: "1.5px solid #ddd",
+    overflow: "hidden",
+    alignSelf: "flex-start",
+    marginBottom: "2vh",
+  },
+  segment: {
+    padding: "8px 18px",
+    background: "#fff",
+    border: "none",
+    fontSize: "clamp(14px, 3vw, 16px)",
+    color: "#007aff",
+    cursor: "pointer",
+    fontWeight: 500,
+  },
+  activeSegment: {
+    background: "#007aff",
+    color: "#fff",
   },
   imgBox: {
     width: "100%",
@@ -238,10 +347,10 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "flex-start", // pushes elements upward
+    justifyContent: "flex-start",
     gap: "2.2vh",
-    marginTop: "1vh", // slightly higher in card area
-    height: "25vh", // defines the block to hold them roughly mid-screen
+    marginTop: "1vh",
+    height: "25vh",
   },
   statusConnected: {
     color: "#000",
@@ -261,7 +370,6 @@ const styles = {
   },
 };
 
-// styled checkbox indicator
 const styleTag = document.createElement("style");
 styleTag.innerHTML = `
 input[type="checkbox"][style]::after {
