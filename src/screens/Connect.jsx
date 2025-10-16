@@ -186,11 +186,11 @@ const styles = {
     background: "#fafafa",
     fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
     color: "#000",
-    paddingTop: "2vh", // reduced top margin
+    paddingTop: "2vh",
   },
   card: {
     width: "94vw",
-    height: "min(88vh, 680px)", // reduced height to prevent overflow
+    height: "94vh", // extended to bottom
     background: "#fff",
     color: "#000",
     borderRadius: 20,
@@ -205,7 +205,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    padding: "3.5vw", // slightly reduced internal padding
+    padding: "3.5vw",
     boxSizing: "border-box",
   },
   h2: {
@@ -255,7 +255,7 @@ const styles = {
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "50vh", // reduced slightly for full fit
+    maxHeight: "50vh",
     objectFit: "contain",
     borderRadius: 12,
     border: "1px solid #eee",
