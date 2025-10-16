@@ -263,31 +263,31 @@ const styles = {
     color: "#000",
   },
   subtext: {
-    fontSize: "clamp(14px, 3.5vw, 16px)",
+    fontSize: "clamp(13px, 3.2vw, 15px)",
     fontWeight: 600,
     color: "#000",
-    marginTop: "0.5vh",
-    marginBottom: "1vh",
+    marginTop: "0.3vh",
+    marginBottom: "0.8vh",
     textAlign: "center",
   },
   segmentedWrapper: {
     display: "flex",
     justifyContent: "center",
-    marginBottom: "1vh",
+    marginBottom: "0.8vh",
   },
   segmented: {
     display: "flex",
-    width: "220px",
-    borderRadius: 12,
+    width: "180px",
+    borderRadius: 10,
     border: "1.5px solid #000",
     overflow: "hidden",
   },
   segment: {
     flex: 1,
-    padding: "8px 0",
+    padding: "6px 0",
     background: "#fff",
     border: "none",
-    fontSize: "clamp(14px, 3vw, 16px)",
+    fontSize: "clamp(13px, 3vw, 15px)",
     color: "#000",
     cursor: "pointer",
     fontWeight: 600,
@@ -304,13 +304,13 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "1.5vh",
-    paddingBottom: "0.5vh",
+    paddingTop: "1vh",
+    paddingBottom: "0.3vh",
   },
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "42vh",
+    maxHeight: "50vh",
     objectFit: "contain",
     borderRadius: 12,
     border: "1px solid #eee",
@@ -402,7 +402,6 @@ input[type="checkbox"][style]:checked::after {
   opacity: 1;
 }
 * { color: #000 !important; }
-button, button * { color: inherit !important; }
 html, body { background: #fafafa !important; margin: 0; padding: 0; overflow: hidden; }
 `;
 document.head.appendChild(styleTag);
