@@ -18,9 +18,9 @@ export default function Connect() {
         signal: ctrl.signal,
       });
       clearTimeout(to);
-      return res.status === 204;
+      return res.status === 204; // online
     } catch {
-      return false;
+      return false; // offline
     }
   }
 
@@ -70,121 +70,79 @@ export default function Connect() {
   }
 
   function renderInstructions() {
-    if (platform === "ios") {
-      return (
-        <>
-          <div style={styles.imgBox}>
-            <img
-              src="/assets/wifi.png"
-              alt="Wi-Fi instructions (iOS)"
-              style={styles.img}
-            />
-          </div>
-          <div style={styles.content}>
-            {!isConnected ? (
-              <>
-                <p style={styles.intro}>
-                  Check the following steps after you complete them:
-                </p>
-                <ul style={styles.list}>
-                  <li style={styles.item}>
-                    <label style={styles.label}>
-                      <input
-                        type="checkbox"
-                        checked={checks.wifi}
-                        onChange={() => toggle("wifi")}
-                        style={styles.checkbox}
-                      />{" "}
-                      1. Go to your Wi-Fi settings and select the Wi-Fi:{" "}
-                      <b>floto_cam</b>.
-                    </label>
-                  </li>
-                  <li style={styles.item}>
-                    <label style={styles.label}>
-                      <input
-                        type="checkbox"
-                        checked={checks.portal}
-                        onChange={() => toggle("portal")}
-                        style={styles.checkbox}
-                      />{" "}
-                      2. <b>Wait 5–10 s for a captive portal to launch.</b> Then,
-                      tap “Cancel” → “Use without Internet”.
-                    </label>
-                  </li>
-                </ul>
-                <p style={styles.status}>{status}</p>
-              </>
-            ) : (
-              <div style={styles.ctaColumn}>
-                <p style={styles.statusConnected}>{status}</p>
-                <button
-                  onClick={() => window.open("http://floto.cam", "_blank")}
-                  style={styles.btn}
-                >
-                  Launch Camera App
-                </button>
-              </div>
-            )}
-          </div>
-        </>
-      );
-    } else if (platform === "android") {
-      return (
-        <>
-          <div style={styles.imgBox}>
-            <img
-              src="/assets/wifi.png"
-              alt="Wi-Fi instructions (Android)"
-              style={styles.img}
-            />
-          </div>
-          <div style={styles.content}>
-            {!isConnected ? (
-              <>
-                <p style={styles.intro}>
-                  Check the following steps after you complete them:
-                </p>
-                <ul style={styles.list}>
-                  <li style={styles.item}>
-                    <label style={styles.label}>
-                      <input
-                        type="checkbox"
-                        checked={checks.wifi}
-                        onChange={() => toggle("wifi")}
-                        style={styles.checkbox}
-                      />{" "}
-                      1. Android instructions placeholder – step 1.
-                    </label>
-                  </li>
-                  <li style={styles.item}>
-                    <label style={styles.label}>
-                      <input
-                        type="checkbox"
-                        checked={checks.portal}
-                        onChange={() => toggle("portal")}
-                        style={styles.checkbox}
-                      />{" "}
-                      2. Android instructions placeholder – step 2.
-                    </label>
-                  </li>
-                </ul>
-                <p style={styles.status}>{status}</p>
-              </>
-            ) : (
-              <div style={styles.ctaColumn}>
-                <p style={styles.statusConnected}>{status}</p>
-                <button
-                  onClick={() => window.open("http://floto.cam", "_blank")}
-                  style={styles.btn}
-                >
-                  Launch Camera App
-                </button>
-              </div>
-            )}
-          </div>
-        </>
-      );
-    }
+    const StepsBlock = (
+      <>
+        <p style={styles.intro}>Check the following steps after you complete them:</p>
+        <ul style={styles.list}>
+          <li style={styles.item}>
+            <label style={styles.label}>
+              <input
+                type="checkbox"
+                checked={checks.wifi}
+                onChange={() => toggle("wifi")}
+                style={styles.checkbox}
+              />{" "}
+              {platform === "ios"
+                ? (
+                    <>
+                      1. Go to your Wi-Fi settings and select the Wi-Fi: <b>floto_cam</b>.
+                    </>
+                  )
+                : "1. Android instructions placeholder – step 1."}
+            </label>
+          </li>
+          <li style={styles.item}>
+            <label style={styles.label}>
+              <input
+                type="checkbox"
+                checked={checks.portal}
+                onChange={() => toggle("portal")}
+                style={styles.checkbox}
+              />{" "}
+              {platform === "ios"
+                ? (
+                    <>
+                      2. <b>Wait 5–10 s for a captive portal to launch.</b> Then, tap
+                      “Cancel” → “Use without Internet”.
+                    </>
+                  )
+                : "2. Android instructions placeholder – step 2."}
+            </label>
+          </li>
+        </ul>
+
+        {/* Reserve space so the status never gets pushed out of view */}
+        <div style={styles.statusBox}>
+          <p style={styles.status}>{status}</p>
+        </div>
+      </>
+    );
+
+    const ConnectedBlock = (
+      <div style={styles.ctaColumn}>
+        <p style={styles.statusConnected}>{status}</p>
+        <button
+          id="launchBtn"
+          onClick={() => window.open("http://floto.cam", "_blank")}
+          style={styles.btn}
+        >
+          Launch Camera App
+        </button>
+      </div>
+    );
+
+    return (
+      <>
+        <div style={styles.imgBox}>
+          <img
+            src="/assets/wifi.png"
+            alt={`Wi-Fi instructions (${platform})`}
+            style={styles.img}
+          />
+        </div>
+        <div style={styles.content}>{!isConnected ? StepsBlock : ConnectedBlock}</div>
+      </>
+    );
   }
 
   return (
@@ -197,20 +155,16 @@ export default function Connect() {
           <div style={styles.segmentedWrapper}>
             <div style={styles.segmented}>
               <button
+                className={`seg-btn ${platform === "ios" ? "active" : ""}`}
                 onClick={() => setPlatform("ios")}
-                style={{
-                  ...styles.segment,
-                  ...(platform === "ios" ? styles.activeSegment : {}),
-                }}
+                style={styles.segment}
               >
                 iOS
               </button>
               <button
+                className={`seg-btn ${platform === "android" ? "active" : ""}`}
                 onClick={() => setPlatform("android")}
-                style={{
-                  ...styles.segment,
-                  ...(platform === "android" ? styles.activeSegment : {}),
-                }}
+                style={styles.segment}
               >
                 Android
               </button>
@@ -263,21 +217,21 @@ const styles = {
     color: "#000",
   },
   subtext: {
-    fontSize: "clamp(13px, 3.2vw, 15px)",
-    fontWeight: 600,
+    fontSize: "clamp(12px, 3vw, 14px)",
+    fontWeight: 700,
     color: "#000",
     marginTop: "0.3vh",
-    marginBottom: "0.8vh",
+    marginBottom: "0.6vh",
     textAlign: "center",
   },
   segmentedWrapper: {
     display: "flex",
     justifyContent: "center",
-    marginBottom: "0.8vh",
+    marginBottom: "0.6vh",
   },
   segmented: {
     display: "flex",
-    width: "180px",
+    width: "170px",
     borderRadius: 10,
     border: "1.5px solid #000",
     overflow: "hidden",
@@ -287,16 +241,11 @@ const styles = {
     padding: "6px 0",
     background: "#fff",
     border: "none",
-    fontSize: "clamp(13px, 3vw, 15px)",
+    fontSize: "clamp(12px, 2.9vw, 14px)",
     color: "#000",
     cursor: "pointer",
-    fontWeight: 600,
+    fontWeight: 700,
     textAlign: "center",
-    transition: "all 0.2s ease",
-  },
-  activeSegment: {
-    background: "#000",
-    color: "#fff",
   },
   imgBox: {
     width: "100%",
@@ -304,13 +253,13 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "1vh",
+    paddingTop: "0.8vh",
     paddingBottom: "0.3vh",
   },
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "50vh",
+    maxHeight: "52vh", // more space given to image, still fits in viewport
     objectFit: "contain",
     borderRadius: 12,
     border: "1px solid #eee",
@@ -325,17 +274,17 @@ const styles = {
     marginTop: "0.5vh",
   },
   intro: {
-    fontWeight: 600,
-    fontSize: "clamp(15px, 3.6vw, 17px)",
+    fontWeight: 700,
+    fontSize: "clamp(14px, 3.4vw, 16px)",
     marginBottom: "2vw",
     color: "#000",
   },
   list: { listStyle: "none", padding: 0, margin: 0, color: "#000" },
-  item: { margin: "1.5vw 0" },
+  item: { margin: "1.4vw 0" },
   label: {
     cursor: "pointer",
     lineHeight: 1.5,
-    fontSize: "clamp(14px, 3.5vw, 16px)",
+    fontSize: "clamp(14px, 3.4vw, 16px)",
     color: "#000",
   },
   checkbox: {
@@ -352,40 +301,56 @@ const styles = {
     position: "relative",
     marginRight: 8,
   },
+  // fixed-height box so the status always remains visible within the card
+  statusBox: {
+    minHeight: 26, // reserve space for one line of status text
+    display: "grid",
+    placeItems: "center",
+    marginTop: "1.6vh",
+  },
   status: {
-    marginTop: "2vh",
     textAlign: "center",
     color: "#444",
-    fontSize: "clamp(14px, 3.3vw, 16px)",
+    fontSize: "clamp(14px, 3.2vw, 16px)",
+    margin: 0,
   },
   ctaColumn: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: "1.5vh",
+    gap: "1.4vh",
     marginTop: "1vh",
   },
   statusConnected: {
     color: "#000",
-    fontSize: "clamp(15px, 3.5vw, 17px)",
-    fontWeight: 600,
+    fontSize: "clamp(15px, 3.4vw, 17px)",
+    fontWeight: 700,
     textAlign: "center",
+    margin: 0,
   },
   btn: {
     padding: "12px 20px",
     border: 0,
     borderRadius: 10,
     background: "#000",
-    color: "#fff",
+    color: "#fff", // explicit white text
     cursor: "pointer",
     minWidth: 200,
-    fontSize: "clamp(15px, 3.5vw, 17px)",
+    fontSize: "clamp(15px, 3.4vw, 17px)",
   },
 };
 
+// CSS injections (scoped, no universal overrides)
 const styleTag = document.createElement("style");
 styleTag.innerHTML = `
+/* Segmented control selected state: force white text on black */
+.seg-btn.active { background:#000 !important; color:#fff !important; }
+
+/* Launch button: lock white text permanently */
+#launchBtn, #launchBtn * { color:#fff !important; }
+
+/* Checkbox tick */
 input[type="checkbox"][style]::after {
   content: "";
   position: absolute;
@@ -398,10 +363,9 @@ input[type="checkbox"][style]::after {
   transform: rotate(45deg);
   opacity: 0;
 }
-input[type="checkbox"][style]:checked::after {
-  opacity: 1;
-}
-* { color: #000 !important; }
-html, body { background: #fafafa !important; margin: 0; padding: 0; overflow: hidden; }
+input[type="checkbox"][style]:checked::after { opacity:1; }
+
+/* Keep page/background stable without forcing button text colors */
+html, body { background:#fafafa; margin:0; padding:0; }
 `;
 document.head.appendChild(styleTag);
