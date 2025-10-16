@@ -193,25 +193,27 @@ export default function Connect() {
         <div style={styles.inner}>
           <h2 style={styles.h2}>📷 Connect to Camera</h2>
 
-          <div style={styles.segmented}>
-            <button
-              onClick={() => setPlatform("ios")}
-              style={{
-                ...styles.segment,
-                ...(platform === "ios" ? styles.activeSegment : {}),
-              }}
-            >
-              iOS
-            </button>
-            <button
-              onClick={() => setPlatform("android")}
-              style={{
-                ...styles.segment,
-                ...(platform === "android" ? styles.activeSegment : {}),
-              }}
-            >
-              Android
-            </button>
+          <div style={styles.segmentedWrapper}>
+            <div style={styles.segmented}>
+              <button
+                onClick={() => setPlatform("ios")}
+                style={{
+                  ...styles.segment,
+                  ...(platform === "ios" ? styles.activeSegment : {}),
+                }}
+              >
+                iOS
+              </button>
+              <button
+                onClick={() => setPlatform("android")}
+                style={{
+                  ...styles.segment,
+                  ...(platform === "android" ? styles.activeSegment : {}),
+                }}
+              >
+                Android
+              </button>
+            </div>
           </div>
 
           {renderInstructions()}
@@ -261,26 +263,32 @@ const styles = {
     textAlign: "left",
     color: "#000",
   },
-  segmented: {
+  segmentedWrapper: {
     display: "flex",
-    width: "fit-content",
-    borderRadius: 12,
-    border: "1.5px solid #ddd",
-    overflow: "hidden",
-    alignSelf: "flex-start",
+    justifyContent: "center",
     marginBottom: "2vh",
   },
+  segmented: {
+    display: "flex",
+    width: "220px",
+    borderRadius: 12,
+    border: "1.5px solid #000",
+    overflow: "hidden",
+  },
   segment: {
-    padding: "8px 18px",
+    flex: 1,
+    padding: "10px 0",
     background: "#fff",
     border: "none",
     fontSize: "clamp(14px, 3vw, 16px)",
-    color: "#007aff",
+    color: "#000",
     cursor: "pointer",
-    fontWeight: 500,
+    fontWeight: 600,
+    textAlign: "center",
+    transition: "all 0.2s ease",
   },
   activeSegment: {
-    background: "#007aff",
+    background: "#000",
     color: "#fff",
   },
   imgBox: {
