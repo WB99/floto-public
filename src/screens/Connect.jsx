@@ -18,9 +18,9 @@ export default function Connect() {
         signal: ctrl.signal,
       });
       clearTimeout(to);
-      return res.status === 204; // online
+      return res.status === 204;
     } catch {
-      return false; // offline
+      return false;
     }
   }
 
@@ -110,8 +110,6 @@ export default function Connect() {
             </label>
           </li>
         </ul>
-
-        {/* Reserve space so the status never gets pushed out of view */}
         <div style={styles.statusBox}>
           <p style={styles.status}>{status}</p>
         </div>
@@ -184,14 +182,15 @@ const styles = {
     width: "100vw",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start", // push up
     background: "#fafafa",
     fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
     color: "#000",
+    paddingTop: "4vh", // top margin
   },
   card: {
     width: "94vw",
-    height: "90vh",
+    height: "min(94vh, 680px)", // extend slightly for symmetry
     background: "#fff",
     color: "#000",
     borderRadius: 20,
@@ -259,7 +258,7 @@ const styles = {
   img: {
     width: "100%",
     height: "auto",
-    maxHeight: "52vh", // more space given to image, still fits in viewport
+    maxHeight: "52vh",
     objectFit: "contain",
     borderRadius: 12,
     border: "1px solid #eee",
@@ -301,9 +300,8 @@ const styles = {
     position: "relative",
     marginRight: 8,
   },
-  // fixed-height box so the status always remains visible within the card
   statusBox: {
-    minHeight: 26, // reserve space for one line of status text
+    minHeight: 26,
     display: "grid",
     placeItems: "center",
     marginTop: "1.6vh",
@@ -334,38 +332,22 @@ const styles = {
     border: 0,
     borderRadius: 10,
     background: "#000",
-    color: "#fff", // explicit white text
+    color: "#fff",
     cursor: "pointer",
     minWidth: 200,
     fontSize: "clamp(15px, 3.4vw, 17px)",
   },
 };
 
-// CSS injections (scoped, no universal overrides)
 const styleTag = document.createElement("style");
 styleTag.innerHTML = `
-/* Segmented control selected state: force white text on black */
 .seg-btn.active { background:#000 !important; color:#fff !important; }
-
-/* Launch button: lock white text permanently */
 #launchBtn, #launchBtn * { color:#fff !important; }
-
-/* Checkbox tick */
 input[type="checkbox"][style]::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 6px;
-  width: 5px;
-  height: 10px;
-  border: solid #000;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-  opacity: 0;
+  content:""; position:absolute; top:2px; left:6px; width:5px; height:10px;
+  border:solid #000; border-width:0 2px 2px 0; transform:rotate(45deg); opacity:0;
 }
 input[type="checkbox"][style]:checked::after { opacity:1; }
-
-/* Keep page/background stable without forcing button text colors */
-html, body { background:#fafafa; margin:0; padding:0; }
+html,body { background:#fafafa; margin:0; padding:0; overflow:hidden; }
 `;
 document.head.appendChild(styleTag);
