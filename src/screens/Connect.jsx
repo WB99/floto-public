@@ -82,13 +82,7 @@ export default function Connect() {
                 onChange={() => toggle("wifi")}
                 style={styles.checkbox}
               />{" "}
-              {platform === "ios"
-                ? (
-                    <>
-                      1. Go to your Wi-Fi settings and select the Wi-Fi: <b>floto_cam</b>.
-                    </>
-                  )
-                : "1. Android instructions placeholder – step 1."}
+              1. Go to your Wi-Fi settings and select the Wi-Fi: <b>floto_cam</b>.
             </label>
           </li>
           <li style={styles.item}>
@@ -99,14 +93,18 @@ export default function Connect() {
                 onChange={() => toggle("portal")}
                 style={styles.checkbox}
               />{" "}
-              {platform === "ios"
-                ? (
-                    <>
-                      2. <b>Wait 5–10 s for a captive portal to launch.</b> Then, tap
-                      “Cancel” → “Use without Internet”.
-                    </>
-                  )
-                : "2. Android instructions placeholder – step 2."}
+              {platform === "ios" ? (
+                <>
+                  2. <b>Wait 5–10 s for a captive portal to launch.</b> Then, tap
+                  “Cancel” → “Use without Internet”.
+                </>
+              ) : (
+                <>
+                  2. When you see a <b>pop-up or notification</b> like{" "}
+                  <b>"Internet may not be available"</b> or <b>"Limited connectivity"</b>,
+                  tap <b>"Always connect"</b> or <b>"Connect anyway"</b>.
+                </>
+              )}
             </label>
           </li>
         </ul>
@@ -129,18 +127,20 @@ export default function Connect() {
       </div>
     );
 
+    const imgPrefix = platform === "ios" ? "ios" : "android";
+
     return (
       <>
         <div style={styles.imgBox}>
           <div style={styles.imgRow}>
             <img
-              src="/assets/ios-wifi-1.jpg"
-              alt="Wi-Fi step 1"
+              src={`/assets/${imgPrefix}-wifi-1.jpg`}
+              alt={`${platform} Wi-Fi step 1`}
               style={styles.dualImg}
             />
             <img
-              src="/assets/ios-wifi-2.jpg"
-              alt="Wi-Fi step 2"
+              src={`/assets/${imgPrefix}-wifi-2.jpg`}
+              alt={`${platform} Wi-Fi step 2`}
               style={styles.dualImg}
             />
           </div>
