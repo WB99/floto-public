@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 export default function Connect() {
     const [isConnected, setIsConnected] = useState(false);
-    const [status, setStatus] = useState("🛜 Waiting for connection...");
+    const [status, setStatus] = useState("Waiting for connection...");
     const [checks, setChecks] = useState({ wifi: false, portal: false });
     const [isOnline, setIsOnline] = useState(true);
     const [platform, setPlatform] = useState("ios");
@@ -43,13 +43,13 @@ export default function Connect() {
         const allChecked = checks.wifi && checks.portal;
 
         if (platform === "android" && checks.wifi && !checks.portal) {
-            setStatus("🛜 Waiting for connection...");
+            setStatus("Connecting...");
             const hintTimer = setTimeout(() => {
                 setStatus(
                     "💡 Didn't see anything for step 2? Turn off Do Not Disturb mode & look out for notifications."
                 );
                 const revertTimer = setTimeout(() => {
-                    setStatus("🛜 Waiting for connection...");
+                    setStatus("Connecting...");
                 }, 5000);
                 return () => clearTimeout(revertTimer);
             }, 3000);
@@ -58,14 +58,14 @@ export default function Connect() {
 
         if (!allChecked) {
             setIsConnected(false);
-            setStatus("🛜 Waiting for connection...");
+            setStatus("Waiting for connection...");
             return;
         }
 
         if (allChecked && !isOnline) {
             setTimeout(() => {
                 setIsConnected(true);
-                setStatus("✅ Connected!");
+                setStatus("Connected! ✅");
             }, 1000);
         } else if (allChecked && isOnline) {
             setTimeout(() => {
@@ -75,7 +75,7 @@ export default function Connect() {
                 setIsConnected(false);
                 setTimeout(() => {
                     setChecks({ wifi: false, portal: false });
-                    setStatus("🛜 Waiting for connection...");
+                    setStatus("Waiting for connection...");
                 }, 5000);
             }, 1000);
         }
@@ -253,6 +253,8 @@ const styles = {
         textDecoration: "underline",
         textDecorationColor: "red",
         textDecorationThickness: "2px",
+        animation: "blink-red-glow 1.2s infinite",
+        textShadow: "0 0 10px rgba(255,0,0,0.6)",
     },
     subtext: {
         fontSize: "clamp(14px, 3.2vw, 16px)",
@@ -387,6 +389,12 @@ styleTag.innerHTML = `
   100% { box-shadow: 0 0 5px rgba(0,255,0,0.4); }
 }
 
+@keyframes blink-red-glow {
+  0% { text-shadow: 0 0 6px rgba(255,0,0,0.4); color: red; }
+  50% { text-shadow: 0 0 14px rgba(255,0,0,0.9); color: #ff3b3b; }
+  100% { text-shadow: 0 0 6px rgba(255,0,0,0.4); color: red; }
+}
+
 input[type="checkbox"][style]::after {
   content:"";
   position:absolute;
@@ -400,7 +408,6 @@ input[type="checkbox"][style]::after {
   opacity:0;
 }
 
-/* When checked */
 input[type="checkbox"][style]:checked {
   border-color: #0f0 !important;
   animation: glow-green 1.5s infinite !important;
