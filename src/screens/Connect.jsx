@@ -16,8 +16,8 @@ export default function Connect() {
                 signal: ctrl.signal,
             });
             clearTimeout(to);
-            return res.status === 204;
-            // return true;
+            // return res.status === 204;
+            return true;
         } catch {
             return false;
         }
@@ -57,8 +57,8 @@ export default function Connect() {
                 <div style={connected ? styles.innerCenter : styles.inner}>
                     <div style={styles.imgBox}>
                         <img
-                            src="/assets/camera-wifi.png"
-                            alt="Camera Wi-Fi Icon"
+                            src='/assets/camera-wifi.png'
+                            alt='Camera Wi-Fi Icon'
                             style={styles.singleImg}
                         />
                     </div>
@@ -68,44 +68,36 @@ export default function Connect() {
                         <>
                             {/* Step 1 Card */}
                             <div style={styles.instructionCard}>
-                                <h3 style={styles.cardHeader}>1</h3>
                                 <p style={styles.text}>
-                                    ⚙️ <b>Settings</b> → Connect 🛜 <b>floto_cam</b>
+                                    Connect 🛜 <b>floto_cam</b>
                                 </p>
                             </div>
 
                             <div style={styles.arrowBox}>
                                 <img
-                                    src="/assets/down-arrow.png"
-                                    alt="Down Arrow"
+                                    src='/assets/down-arrow.png'
+                                    alt='Down Arrow'
                                     style={styles.arrowImg}
                                 />
                             </div>
 
                             {/* Step 2 Card */}
                             <div style={styles.instructionCard}>
-                                <h3 style={styles.cardHeader}>2</h3>
-
                                 <div style={styles.osBlock}>
-                                    <p style={styles.subHeader}>
+                                    <p style={styles.text}>
                                         <img
-                                            src="/assets/apple-logo.png"
-                                            alt="Apple"
+                                            src='/assets/apple-logo.png'
+                                            alt='Apple'
                                             style={styles.inlineIcon}
                                         />{" "}
-                                        iOS
-                                    </p>
-                                    <p style={styles.text}>
-                                        Wait for <b>captive portal</b>
-                                        <br />
-                                        ↳{" "}
+                                        Wait for popup
+                                        <br />↳{" "}
                                         <img
-                                            src="/assets/click.png"
-                                            alt="Click"
+                                            src='/assets/click.png'
+                                            alt='Click'
                                             style={styles.clickIcon}
                                         />{" "}
-                                        <b>Cancel</b> →{" "}
-                                        <b>“Use without Internet”</b>
+                                        Cancel → “Use without Internet”
                                     </p>
                                 </div>
 
@@ -116,25 +108,21 @@ export default function Connect() {
                                 </div>
 
                                 <div style={styles.osBlock}>
-                                    <p style={styles.subHeader}>
+                                    <p style={styles.text}>
                                         <img
-                                            src="/assets/android-logo.png"
-                                            alt="Android"
+                                            src='/assets/android-logo.png'
+                                            alt='Android'
                                             style={styles.inlineIcon}
                                         />{" "}
-                                        Android
-                                    </p>
-                                    <p style={styles.text}>
-                                        <b>"Limited/No internet”</b> popup/notification
-                                        <br />
-                                        ↳{" "}
+                                        Wait for popup/notification
+                                        <br />↳{" "}
                                         <img
-                                            src="/assets/click.png"
-                                            alt="Click"
+                                            src='/assets/click.png'
+                                            alt='Click'
                                             style={styles.clickIcon}
                                         />{" "}
-                                        <b>“Always connect”</b> /{" "}
-                                        <b>“Connect anyway”</b>
+                                        “Always connect” /{" "}
+                                        “Connect anyway”
                                     </p>
                                 </div>
                             </div>
@@ -180,7 +168,7 @@ const styles = {
         fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
         color: "#000",
         paddingTop: "2vh",
-        overflow: "visible" // allow internal scrollbars to show
+        overflow: "visible", // allow internal scrollbars to show
     },
     card: {
         width: "92vw",
