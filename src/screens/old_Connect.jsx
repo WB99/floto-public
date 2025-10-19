@@ -2,11 +2,14 @@
 import { useEffect, useState } from "react";
 
 export default function Connect() {
-    const [status, setStatus] = useState("🛜 Waiting for connection…");
-    const [pingFailures, setPingFailures] = useState(0);
-    const [connected, setConnected] = useState(false);
+    const [status, setStatus] = useState("🛜 Waiting for connection...");
+    const [done1, setDone1] = useState(false);
+    const [done2, setDone2] = useState(false);
+    const [isConnected, setIsConnected] = useState(false);
+    const [isOnline, setIsOnline] = useState(true);
+    const [showBlink, setShowBlink] = useState(true);
 
-    async function pingInternetOnce(timeoutMs = 2000) {
+    async function pingInternetOnce(timeoutMs = 1000) {
         try {
             const ctrl = new AbortController();
             const to = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -16,33 +19,20 @@ export default function Connect() {
                 signal: ctrl.signal,
             });
             clearTimeout(to);
-            return res.status === 204;
-            // return true;
+            return res.status === 204; // true = online, false = offline
         } catch {
             return false;
         }
     }
 
+    // ping every 2 seconds
     useEffect(() => {
         let active = true;
         async function loop() {
             while (active) {
                 const online = await pingInternetOnce();
-                if (!online) {
-                    setPingFailures((prev) => {
-                        const next = prev + 1;
-                        if (next === 1) setStatus("⚙️ Connecting…");
-                        if (next >= 2) {
-                            setStatus("✅ Connected!");
-                            setConnected(true);
-                        }
-                        return next;
-                    });
-                } else {
-                    setPingFailures(0);
-                    setStatus("🛜 Waiting for connection…");
-                }
-                await new Promise((r) => setTimeout(r, 1500));
+                setIsOnline(online);
+                await new Promise((r) => setTimeout(r, 2000));
             }
         }
         loop();
@@ -51,10 +41,71 @@ export default function Connect() {
         };
     }, []);
 
+    // status text and connection logic
+    useEffect(() => {
+        let hintTimer;
+        let revertTimer;
+
+        // default state
+        if (!done1 && !done2) {
+            setStatus("🛜 Waiting for connection...");
+            setShowBlink(true);
+        }
+
+        // after first done pressed
+        if (done1 && !done2) {
+            setStatus("⚙️ Connecting...");
+            setShowBlink(true);
+            hintTimer = setTimeout(() => {
+                if (!done2) {
+                    setStatus(
+                        "💡Didn't see any popup or notification? Turn off Do Not Disturb mode or wait a little longer"
+                    );
+                    setShowBlink(false);
+                    // revert after 10s
+                    revertTimer = setTimeout(() => {
+                        setStatus("🛜 Waiting for connection...");
+                        setShowBlink(true);
+                        setDone2(false);
+                    }, 10000);
+                }
+            }, 5000);
+        }
+
+        // both done pressed
+        if (done1 && done2) {
+            if (isOnline) {
+                setStatus("⚠️ Connection error. Forget the network and try again");
+                setShowBlink(false);
+                // revert after 10s and reset buttons
+                revertTimer = setTimeout(() => {
+                    setStatus("🛜 Waiting for connection...");
+                    setShowBlink(true);
+                    setDone1(false);
+                    setDone2(false);
+                }, 7000);
+            } else {
+                setStatus("✅ Connected!");
+                setIsConnected(true);
+                setShowBlink(false);
+            }
+        }
+
+        return () => {
+            clearTimeout(hintTimer);
+            clearTimeout(revertTimer);
+        };
+    }, [done1, done2, isOnline]);
+
+    function handleDone(which) {
+        if (which === 1 && !done1) setDone1(true);
+        if (which === 2 && !done2) setDone2(true);
+    }
+
     return (
         <main style={styles.wrap}>
             <section style={styles.card}>
-                <div style={connected ? styles.innerCenter : styles.inner}>
+                <div style={isConnected ? styles.innerCenter : styles.inner}>
                     <div style={styles.imgBox}>
                         <img
                             src="/assets/camera-wifi.png"
@@ -64,13 +115,23 @@ export default function Connect() {
                     </div>
                     <h2 style={styles.h2}>Connect to Camera</h2>
 
-                    {!connected ? (
+                    {!isConnected ? (
                         <>
                             {/* Step 1 Card */}
                             <div style={styles.instructionCard}>
                                 <p style={styles.text}>
-                                    Connect Wi-Fi 🛜 <b>floto_cam</b>
+                                    Connect 🛜 <b>floto_cam</b>
                                 </p>
+                                <button
+                                    style={{
+                                        ...styles.btn,
+                                        background: done1 ? "#333" : "#000",
+                                    }}
+                                    onClick={() => handleDone(1)}
+                                    disabled={done1}
+                                >
+                                    {done1 ? "✅" : "Done"}
+                                </button>
                             </div>
 
                             <div style={styles.arrowBox}>
@@ -124,14 +185,23 @@ export default function Connect() {
                                         "Connect”
                                     </p>
                                 </div>
+
+                                <button
+                                    style={{
+                                        ...styles.btn,
+                                        background: done2 ? "#333" : "#000",
+                                    }}
+                                    onClick={() => handleDone(2)}
+                                    disabled={done2}
+                                >
+                                    {done2 ? "✅" : "Done"}
+                                </button>
                             </div>
 
                             <p
                                 style={{
                                     ...styles.status,
-                                    ...(status.includes("Connected")
-                                        ? styles.statusConnected
-                                        : styles.statusBlink),
+                                    ...(showBlink ? styles.statusBlink : {}),
                                 }}
                             >
                                 {status}
@@ -139,7 +209,7 @@ export default function Connect() {
                         </>
                     ) : (
                         <div style={styles.connectedCenterBlock}>
-                            <p style={styles.statusConnected}>{status}</p>
+                            <p style={styles.statusConnected}>✅ Connected!</p>
                             <button
                                 onClick={() =>
                                     window.open("http://floto.cam", "_blank")
@@ -234,6 +304,7 @@ const styles = {
     text: {
         fontSize: "clamp(15px, 4.2vw, 24px)",
         margin: 0,
+        marginBottom: "0.6vh",
         lineHeight: 1.4,
         color: "#333",
         textAlign: "center",
@@ -254,17 +325,6 @@ const styles = {
         alignItems: "center",
         justifyContent: "center",
     },
-    subHeader: {
-        fontSize: "clamp(15px, 4.5vw, 26px)",
-        color: "#000",
-        fontWeight: 700,
-        marginTop: "0.6vh",
-        marginBottom: "0.4vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "6px",
-    },
     inlineIcon: {
         height: "1em",
         width: "auto",
@@ -284,14 +344,12 @@ const styles = {
         width: "100%",
         gap: "10px",
         margin: "0.8vh 0",
-        position: "relative",
     },
     orLine: {
-        flexGrow: 1,
+        width: "30%",
         height: "1px",
         backgroundColor: "#555",
         opacity: 0.6,
-        maxWidth: "30%",
     },
     orText: {
         fontSize: "clamp(14px, 3.2vw, 15px)",
@@ -329,8 +387,9 @@ const styles = {
         background: "#000",
         color: "#fff",
         cursor: "pointer",
-        minWidth: 200,
+        minWidth: 160,
         fontSize: "clamp(16px, 3.8vw, 18px)",
+        marginTop: "1vh",
     },
 };
 
