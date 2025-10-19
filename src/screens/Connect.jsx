@@ -17,37 +17,50 @@ export default function Connect() {
             });
             clearTimeout(to);
             return res.status === 204;
-            // return true;
         } catch {
             return false;
         }
     }
 
+    // ping loop that pauses when tab not visible
     useEffect(() => {
         let active = true;
+        let shouldPing = document.visibilityState === "visible";
+
+        function handleVisibilityChange() {
+            shouldPing = document.visibilityState === "visible";
+        }
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
         async function loop() {
             while (active) {
-                const online = await pingInternetOnce();
-                if (!online) {
-                    setPingFailures((prev) => {
-                        const next = prev + 1;
-                        if (next === 1) setStatus("⚙️ Connecting…");
-                        if (next >= 2) {
-                            setStatus("✅ Connected!");
-                            setConnected(true);
-                        }
-                        return next;
-                    });
-                } else {
-                    setPingFailures(0);
-                    setStatus("🛜 Waiting for connection…");
+                if (shouldPing) {
+                    const online = await pingInternetOnce();
+                    if (!online) {
+                        setPingFailures((prev) => {
+                            const next = prev + 1;
+                            if (next === 1) setStatus("⚙️ Connecting…");
+                            if (next >= 2) {
+                                setStatus("✅ Connected!");
+                                setConnected(true);
+                            }
+                            return next;
+                        });
+                    } else {
+                        setPingFailures(0);
+                        setStatus("🛜 Waiting for connection…");
+                    }
                 }
-                await new Promise((r) => setTimeout(r, 1500));
+                await new Promise((r) => setTimeout(r, 1500)); // interval between pings
             }
         }
+
         loop();
+
         return () => {
             active = false;
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
     }, []);
 
@@ -253,17 +266,6 @@ const styles = {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-    },
-    subHeader: {
-        fontSize: "clamp(15px, 4.5vw, 26px)",
-        color: "#000",
-        fontWeight: 700,
-        marginTop: "0.6vh",
-        marginBottom: "0.4vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "6px",
     },
     inlineIcon: {
         height: "1em",
