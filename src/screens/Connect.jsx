@@ -2,11 +2,9 @@
 import { useEffect, useState } from "react";
 
 export default function Connect() {
-    const [isConnected, setIsConnected] = useState(false);
-    const [status, setStatus] = useState("Waiting for connection...");
-    const [checks, setChecks] = useState({ wifi: false, portal: false });
-    const [isOnline, setIsOnline] = useState(true);
-    const [platform, setPlatform] = useState("ios");
+    const [status, setStatus] = useState("🛜 Waiting for connection…");
+    const [pingFailures, setPingFailures] = useState(0);
+    const [connected, setConnected] = useState(false);
 
     async function pingInternetOnce(timeoutMs = 1000) {
         try {
@@ -18,7 +16,8 @@ export default function Connect() {
                 signal: ctrl.signal,
             });
             clearTimeout(to);
-            return res.status === 204;
+            // return res.status === 204;
+            return true;
         } catch {
             return false;
         }
@@ -29,7 +28,20 @@ export default function Connect() {
         async function loop() {
             while (active) {
                 const online = await pingInternetOnce();
-                setIsOnline(online);
+                if (!online) {
+                    setPingFailures((prev) => {
+                        const next = prev + 1;
+                        if (next === 1) setStatus("⚙️ Connecting…");
+                        if (next >= 2) {
+                            setStatus("✅ Connected!");
+                            setConnected(true);
+                        }
+                        return next;
+                    });
+                } else {
+                    setPingFailures(0);
+                    setStatus("🛜 Waiting for connection…");
+                }
                 await new Promise((r) => setTimeout(r, 1500));
             }
         }
@@ -39,165 +51,118 @@ export default function Connect() {
         };
     }, []);
 
-    useEffect(() => {
-        const allChecked = checks.wifi && checks.portal;
-
-        if (platform === "android" && checks.wifi && !checks.portal) {
-            setStatus("Connecting...");
-            const hintTimer = setTimeout(() => {
-                setStatus(
-                    "💡 Didn't see anything for step 2? Turn off Do Not Disturb mode & look out for notifications."
-                );
-                const revertTimer = setTimeout(() => {
-                    setStatus("Connecting...");
-                }, 5000);
-                return () => clearTimeout(revertTimer);
-            }, 3000);
-            return () => clearTimeout(hintTimer);
-        }
-
-        if (!allChecked) {
-            setIsConnected(false);
-            setStatus("Waiting for connection...");
-            return;
-        }
-
-        if (allChecked && !isOnline) {
-            setTimeout(() => {
-                setIsConnected(true);
-                setStatus("Connected! ✅");
-            }, 1000);
-        } else if (allChecked && isOnline) {
-            setTimeout(() => {
-                setStatus(
-                    "⚠️ Connection problem. Forget the network “floto_cam” and retry the steps again"
-                );
-                setIsConnected(false);
-                setTimeout(() => {
-                    setChecks({ wifi: false, portal: false });
-                    setStatus("Waiting for connection...");
-                }, 5000);
-            }, 1000);
-        }
-    }, [checks, isOnline, platform]);
-
-    function toggle(key) {
-        setChecks((c) => ({ ...c, [key]: !c[key] }));
-    }
-
-    function renderInstructions() {
-        const StepsBlock = (
-            <>
-                <h2 style={styles.cta}>☑️ Check boxes when done</h2>
-                <ul style={styles.list}>
-                    <li style={styles.item}>
-                        <label style={styles.label}>
-                            <input
-                                type='checkbox'
-                                checked={checks.wifi}
-                                onChange={() => toggle("wifi")}
-                                style={styles.checkbox}
-                            />{" "}
-                            1. Go to your Wi-Fi settings and select the Wi-Fi:{" "}
-                            <b>floto_cam</b>.
-                        </label>
-                    </li>
-                    <li style={styles.item}>
-                        <label style={styles.label}>
-                            <input
-                                type='checkbox'
-                                checked={checks.portal}
-                                onChange={() => toggle("portal")}
-                                style={styles.checkbox}
-                            />{" "}
-                            {platform === "ios" ? (
-                                <>
-                                    2.{" "}
-                                    <b>
-                                        Wait 5–10 s for a captive portal to
-                                        launch.
-                                    </b>{" "}
-                                    Then, tap “Cancel” → “Use without Internet”.
-                                </>
-                            ) : (
-                                <>
-                                    2. When you see a{" "}
-                                    <b>pop-up or notification</b> like{" "}
-                                    <b>"Internet may not be available"</b> or{" "}
-                                    <b>"Limited connectivity"</b>, tap{" "}
-                                    <b>"Always connect"</b> or{" "}
-                                    <b>"Connect anyway"</b>.
-                                </>
-                            )}
-                        </label>
-                    </li>
-                </ul>
-                <div style={styles.statusBox}>
-                    <p style={styles.status}>{status}</p>
-                </div>
-            </>
-        );
-
-        const ConnectedBlock = (
-            <div style={styles.ctaColumn}>
-                <p style={styles.statusConnected}>{status}</p>
-                <button
-                    id='launchBtn'
-                    onClick={() => window.open("http://floto.cam", "_blank")}
-                    style={styles.btn}
-                >
-                    Launch Camera App
-                </button>
-            </div>
-        );
-
-        return (
-            <>
-                <div style={styles.imgBox}>
-                    <img
-                        src='/assets/wifi-icon.png'
-                        alt='Wi-Fi Icon'
-                        style={styles.singleImg}
-                    />
-                </div>
-                <div style={styles.content}>
-                    {!isConnected ? StepsBlock : ConnectedBlock}
-                </div>
-            </>
-        );
-    }
-
     return (
         <main style={styles.wrap}>
             <section style={styles.card}>
-                <div style={styles.inner}>
-                    <h2 style={styles.h2}>📷 Connect to Camera</h2>
-                    <p style={styles.subtext}>Select your OS</p>
+                <div style={connected ? styles.innerCenter : styles.inner}>
+                    <div style={styles.imgBox}>
+                        <img
+                            src="/assets/camera-wifi.png"
+                            alt="Camera Wi-Fi Icon"
+                            style={styles.singleImg}
+                        />
+                    </div>
+                    <h2 style={styles.h2}>Connect to Camera</h2>
 
-                    <div style={styles.segmentedWrapper}>
-                        <div style={styles.segmented}>
-                            <button
-                                className={`seg-btn ${
-                                    platform === "ios" ? "active" : ""
-                                }`}
-                                onClick={() => setPlatform("ios")}
-                                style={styles.segment}
+                    {!connected ? (
+                        <>
+                            {/* Step 1 Card */}
+                            <div style={styles.instructionCard}>
+                                <h3 style={styles.cardHeader}>1</h3>
+                                <p style={styles.text}>
+                                    ⚙️ <b>Settings</b> → Connect 🛜 <b>floto_cam</b>
+                                </p>
+                            </div>
+
+                            <div style={styles.arrowBox}>
+                                <img
+                                    src="/assets/down-arrow.png"
+                                    alt="Down Arrow"
+                                    style={styles.arrowImg}
+                                />
+                            </div>
+
+                            {/* Step 2 Card */}
+                            <div style={styles.instructionCard}>
+                                <h3 style={styles.cardHeader}>2</h3>
+
+                                <div style={styles.osBlock}>
+                                    <p style={styles.subHeader}>
+                                        <img
+                                            src="/assets/apple-logo.png"
+                                            alt="Apple"
+                                            style={styles.inlineIcon}
+                                        />{" "}
+                                        iOS
+                                    </p>
+                                    <p style={styles.text}>
+                                        Wait for <b>captive portal</b>
+                                        <br />
+                                        ↳{" "}
+                                        <img
+                                            src="/assets/click.png"
+                                            alt="Click"
+                                            style={styles.clickIcon}
+                                        />{" "}
+                                        <b>Cancel</b> →{" "}
+                                        <b>“Use without Internet”</b>
+                                    </p>
+                                </div>
+
+                                <div style={styles.orRow}>
+                                    <div style={styles.orLine}></div>
+                                    <span style={styles.orText}>OR</span>
+                                    <div style={styles.orLine}></div>
+                                </div>
+
+                                <div style={styles.osBlock}>
+                                    <p style={styles.subHeader}>
+                                        <img
+                                            src="/assets/android-logo.png"
+                                            alt="Android"
+                                            style={styles.inlineIcon}
+                                        />{" "}
+                                        Android
+                                    </p>
+                                    <p style={styles.text}>
+                                        <b>"Limited/No internet”</b> popup/notification
+                                        <br />
+                                        ↳{" "}
+                                        <img
+                                            src="/assets/click.png"
+                                            alt="Click"
+                                            style={styles.clickIcon}
+                                        />{" "}
+                                        <b>“Always connect”</b> /{" "}
+                                        <b>“Connect anyway”</b>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p
+                                style={{
+                                    ...styles.status,
+                                    ...(status.includes("Connected")
+                                        ? styles.statusConnected
+                                        : styles.statusBlink),
+                                }}
                             >
-                                iOS
-                            </button>
+                                {status}
+                            </p>
+                        </>
+                    ) : (
+                        <div style={styles.connectedCenterBlock}>
+                            <p style={styles.statusConnected}>{status}</p>
                             <button
-                                className={`seg-btn ${
-                                    platform === "android" ? "active" : ""
-                                }`}
-                                onClick={() => setPlatform("android")}
-                                style={styles.segment}
+                                onClick={() =>
+                                    window.open("http://floto.cam", "_blank")
+                                }
+                                style={styles.btn}
                             >
-                                Android
+                                Launch Camera App
                             </button>
                         </div>
-                    </div>
-
-                    {renderInstructions()}
+                    )}
                 </div>
             </section>
         </main>
@@ -215,209 +180,171 @@ const styles = {
         fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
         color: "#000",
         paddingTop: "2vh",
-        overflow: "auto",
+        overflow: "visible", // allow internal scrollbars to show
     },
     card: {
-        width: "94vw",
-        height: "94vh",
+        width: "92vw",
+        height: "92vh",
         background: "#fff",
-        color: "#000",
         borderRadius: 20,
-        boxShadow: "0 8px 30px rgba(0,0,0,.06)",
+        boxShadow: "0 6px 24px rgba(0,0,0,.08)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        overflowY: "auto", // enable vertical scrolling within card
+        overflowX: "hidden",
     },
     inner: {
+        width: "100%",
+        height: "auto", // allow flexible content height
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        padding: "3vw",
+        boxSizing: "border-box",
+    },
+    innerCenter: {
         width: "100%",
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "flex-start",
-        padding: "3.5vw",
-        boxSizing: "border-box",
-    },
-    h2: {
-        fontSize: "clamp(24px, 5vw, 32px)",
-        margin: 0,
-        textAlign: "center",
-        fontWeight: 800,
-    },
-    cta: {
-        fontSize: "clamp(24px, 5vw, 32px)",
-        whiteSpace: "nowrap",
-        margin: 0,
-        textAlign: "center",
-        fontWeight: 800,
-        color: "red",
-        textDecoration: "underline",
-        textDecorationColor: "red",
-        textDecorationThickness: "2px",
-        animation: "blink-red-glow 1.2s infinite",
-        textShadow: "0 0 10px rgba(255,0,0,0.6)",
-    },
-    subtext: {
-        fontSize: "clamp(14px, 3.2vw, 16px)",
-        fontWeight: 700,
-        marginTop: "0.3vh",
-        marginBottom: "0.6vh",
-        textAlign: "center",
-    },
-    segmentedWrapper: {
-        display: "flex",
         justifyContent: "center",
-        marginBottom: "1vh",
-    },
-    segmented: {
-        display: "flex",
-        width: "180px",
-        borderRadius: 10,
-        border: "1.5px solid #000",
-        overflow: "hidden",
-    },
-    segment: {
-        flex: 1,
-        padding: "7px 0",
-        background: "#fff",
-        border: "none",
-        fontSize: "clamp(14px, 3.2vw, 16px)",
-        color: "#000",
-        cursor: "pointer",
-        fontWeight: 700,
+        alignItems: "center",
         textAlign: "center",
     },
     imgBox: {
-        width: "100%",
-        flex: "0 0 auto",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
-        paddingTop: "1vh",
-        paddingBottom: "0.8vh",
+        marginTop: "0.5vh",
+        marginBottom: "0.5vh",
     },
     singleImg: {
-        width: "35%",
         height: "auto",
-        maxHeight: "25vh",
+        maxHeight: "17vh",
         objectFit: "contain",
     },
-    content: {
-        flex: "1 1 auto",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-start",
-        textAlign: "left",
+    h2: {
+        fontSize: "clamp(24px, 5vw, 30px)",
+        margin: "0vh 0 0.5vh 0",
+        fontWeight: 800,
+        textAlign: "center",
+    },
+    instructionCard: {
+        width: "88%",
+        background: "#EBEBEB",
+        borderRadius: 12,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        padding: "1.5vh 3vw",
+        marginTop: "1vh",
+        marginBottom: "1vh",
+        textAlign: "center",
+    },
+    cardHeader: {
+        fontSize: "clamp(18px, 4vw, 22px)",
+        margin: "0 0 0.3vh 0",
+        fontWeight: 800,
+    },
+    text: {
+        fontSize: "clamp(15px, 3.5vw, 17px)",
+        margin: 0,
+        lineHeight: 1.4,
+        color: "#333",
+    },
+    arrowBox: {
         marginTop: "1vh",
     },
-    list: { listStyle: "none", padding: 0, margin: 0 },
-    item: { margin: "2vh 0" },
-    label: {
-        cursor: "pointer",
-        lineHeight: 1.6,
-        fontSize: "clamp(16px, 3.8vw, 18px)",
+    arrowImg: {
+        width: "26px",
+        height: "26px",
+        opacity: 0.8,
     },
-    checkbox: {
-        appearance: "none",
-        WebkitAppearance: "none",
-        MozAppearance: "none",
-        width: 22,
-        height: 22,
-        border: "2px solid #ccc",
-        borderRadius: 5,
-        background: "#fff",
-        display: "inline-block",
-        verticalAlign: "middle",
-        position: "relative",
-        marginRight: 10,
-        boxShadow: "0 0 8px rgba(255,0,0,0.5)",
-        animation: "blink-red 1.2s infinite",
-        transition: "all 0.25s ease",
+    osBlock: {
+        textAlign: "left",
+        marginBottom: "1.2vh",
     },
-    statusBox: {
-        minHeight: 30,
-        display: "grid",
-        placeItems: "center",
-        marginTop: "2vh",
-    },
-    status: {
-        textAlign: "center",
-        color: "#444",
-        fontSize: "clamp(16px, 3.5vw, 18px)",
-        margin: 0,
-    },
-    ctaColumn: {
+    subHeader: {
+        fontSize: "clamp(15px, 3.5vw, 17px)",
+        color: "#000",
+        fontWeight: 700,
+        marginTop: "0.6vh",
+        marginBottom: "0.4vh",
         display: "flex",
-        flexDirection: "column",
+        alignItems: "center",
+        gap: "6px",
+    },
+    inlineIcon: {
+        height: "1em",
+        width: "auto",
+        verticalAlign: "middle",
+        marginRight: "4px",
+    },
+    clickIcon: {
+        height: "1.4em",
+        width: "auto",
+        verticalAlign: "middle",
+        marginRight: "4px",
+    },
+    orRow: {
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: "1.2vh",
-        marginTop: "1vh",
+        gap: "10px",
+        margin: "0.6vh 0 0.8vh 0",
+    },
+    orLine: {
+        flex: 1,
+        height: "1px",
+        backgroundColor: "#555",
+        opacity: 0.6,
+    },
+    orText: {
+        fontSize: "clamp(14px, 3.2vw, 15px)",
+        color: "#555",
+        fontWeight: 600,
+    },
+    status: {
+        fontSize: "clamp(16px, 3.8vw, 18px)",
+        fontWeight: 600,
+        marginTop: "2vh",
+        textAlign: "center",
+    },
+    statusBlink: {
+        animation: "fadeBlink 1s infinite",
     },
     statusConnected: {
-        color: "#000",
         fontSize: "clamp(18px, 3.8vw, 20px)",
         fontWeight: 700,
+        marginTop: "2vh",
+    },
+    connectedCenterBlock: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        gap: "2vh",
         textAlign: "center",
-        margin: 0,
     },
     btn: {
-        padding: "14px 22px",
+        padding: "12px 20px",
         border: 0,
         borderRadius: 10,
         background: "#000",
         color: "#fff",
         cursor: "pointer",
-        minWidth: 220,
+        minWidth: 200,
         fontSize: "clamp(16px, 3.8vw, 18px)",
     },
 };
 
 const styleTag = document.createElement("style");
 styleTag.innerHTML = `
-.seg-btn.active { background:#000 !important; color:#fff !important; }
-#launchBtn, #launchBtn * { color:#fff !important; }
-
-@keyframes blink-red {
-  0% { box-shadow: 0 0 4px rgba(255,0,0,0.5); }
-  50% { box-shadow: 0 0 14px rgba(255,0,0,0.9); }
-  100% { box-shadow: 0 0 4px rgba(255,0,0,0.5); }
+@keyframes fadeBlink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
 }
-
-@keyframes glow-green {
-  0% { box-shadow: 0 0 5px rgba(0,255,0,0.4); }
-  50% { box-shadow: 0 0 14px rgba(0,255,0,0.9); }
-  100% { box-shadow: 0 0 5px rgba(0,255,0,0.4); }
-}
-
-@keyframes blink-red-glow {
-  0% { text-shadow: 0 0 6px rgba(255,0,0,0.4); color: red; }
-  50% { text-shadow: 0 0 14px rgba(255,0,0,0.9); color: #ff3b3b; }
-  100% { text-shadow: 0 0 6px rgba(255,0,0,0.4); color: red; }
-}
-
-input[type="checkbox"][style]::after {
-  content:"";
-  position:absolute;
-  top:2px;
-  left:6px;
-  width:6px;
-  height:11px;
-  border:solid #000;
-  border-width:0 3px 3px 0;
-  transform:rotate(45deg);
-  opacity:0;
-}
-
-input[type="checkbox"][style]:checked {
-  border-color: #0f0 !important;
-  animation: glow-green 1.5s infinite !important;
-  box-shadow: 0 0 10px rgba(0,255,0,0.7) !important;
-}
-
-input[type="checkbox"][style]:checked::after {
-  opacity:1;
-}
-
-html,body { background:#fafafa; margin:0; padding:0; overflow:auto; }
+html,body { background:#fafafa; margin:0; padding:0; }
 `;
 document.head.appendChild(styleTag);
