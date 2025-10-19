@@ -16,8 +16,8 @@ export default function Connect() {
                 signal: ctrl.signal,
             });
             clearTimeout(to);
-            // return res.status === 204;
-            return true;
+            return res.status === 204;
+            // return true;
         } catch {
             return false;
         }
@@ -180,7 +180,7 @@ const styles = {
         fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
         color: "#000",
         paddingTop: "2vh",
-        overflow: "visible", // allow internal scrollbars to show
+        overflow: "visible" // allow internal scrollbars to show
     },
     card: {
         width: "92vw",
@@ -241,12 +241,12 @@ const styles = {
         textAlign: "center",
     },
     cardHeader: {
-        fontSize: "clamp(18px, 4vw, 22px)",
+        fontSize: "clamp(18px, 5.5vw, 28px)",
         margin: "0 0 0.3vh 0",
         fontWeight: 800,
     },
     text: {
-        fontSize: "clamp(15px, 3.5vw, 17px)",
+        fontSize: "clamp(15px, 4.2vw, 24px)",
         margin: 0,
         lineHeight: 1.4,
         color: "#333",
@@ -264,7 +264,7 @@ const styles = {
         marginBottom: "1.2vh",
     },
     subHeader: {
-        fontSize: "clamp(15px, 3.5vw, 17px)",
+        fontSize: "clamp(15px, 4.5vw, 26px)",
         color: "#000",
         fontWeight: 700,
         marginTop: "0.6vh",
