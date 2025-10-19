@@ -66,7 +66,6 @@ export default function Connect() {
                     revertTimer = setTimeout(() => {
                         setStatus("🛜 Waiting for connection...");
                         setShowBlink(true);
-                        setDone1(false);
                         setDone2(false);
                     }, 10000);
                 }
@@ -84,7 +83,7 @@ export default function Connect() {
                     setShowBlink(true);
                     setDone1(false);
                     setDone2(false);
-                }, 10000);
+                }, 7000);
             } else {
                 setStatus("✅ Connected!");
                 setIsConnected(true);
