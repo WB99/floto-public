@@ -57,8 +57,8 @@ export default function Connect() {
                 <div style={connected ? styles.innerCenter : styles.inner}>
                     <div style={styles.imgBox}>
                         <img
-                            src='/assets/camera-wifi.png'
-                            alt='Camera Wi-Fi Icon'
+                            src="/assets/camera-wifi.png"
+                            alt="Camera Wi-Fi Icon"
                             style={styles.singleImg}
                         />
                     </div>
@@ -75,8 +75,8 @@ export default function Connect() {
 
                             <div style={styles.arrowBox}>
                                 <img
-                                    src='/assets/down-arrow.png'
-                                    alt='Down Arrow'
+                                    src="/assets/down-arrow.png"
+                                    alt="Down Arrow"
                                     style={styles.arrowImg}
                                 />
                             </div>
@@ -86,18 +86,18 @@ export default function Connect() {
                                 <div style={styles.osBlock}>
                                     <p style={styles.text}>
                                         <img
-                                            src='/assets/apple-logo.png'
-                                            alt='Apple'
+                                            src="/assets/apple-logo.png"
+                                            alt="Apple"
                                             style={styles.inlineIcon}
                                         />{" "}
                                         Wait for popup
-                                        <br />↳{" "}
+                                        <br />
                                         <img
-                                            src='/assets/click.png'
-                                            alt='Click'
+                                            src="/assets/click.png"
+                                            alt="Click"
                                             style={styles.clickIcon}
                                         />{" "}
-                                        Cancel → “Use without Internet”
+                                        “Use without Internet”
                                     </p>
                                 </div>
 
@@ -110,19 +110,18 @@ export default function Connect() {
                                 <div style={styles.osBlock}>
                                     <p style={styles.text}>
                                         <img
-                                            src='/assets/android-logo.png'
-                                            alt='Android'
+                                            src="/assets/android-logo.png"
+                                            alt="Android"
                                             style={styles.inlineIcon}
                                         />{" "}
                                         Wait for popup/notification
-                                        <br />↳{" "}
+                                        <br />
                                         <img
-                                            src='/assets/click.png'
-                                            alt='Click'
+                                            src="/assets/click.png"
+                                            alt="Click"
                                             style={styles.clickIcon}
                                         />{" "}
-                                        “Always connect” /{" "}
-                                        “Connect anyway”
+                                        "Connect”
                                     </p>
                                 </div>
                             </div>
@@ -168,7 +167,7 @@ const styles = {
         fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
         color: "#000",
         paddingTop: "2vh",
-        overflow: "visible", // allow internal scrollbars to show
+        overflow: "visible",
     },
     card: {
         width: "92vw",
@@ -179,12 +178,12 @@ const styles = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        overflowY: "auto", // enable vertical scrolling within card
+        overflowY: "auto",
         overflowX: "hidden",
     },
     inner: {
         width: "100%",
-        height: "auto", // allow flexible content height
+        height: "auto",
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
@@ -226,18 +225,18 @@ const styles = {
         padding: "1.5vh 3vw",
         marginTop: "1vh",
         marginBottom: "1vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         textAlign: "center",
-    },
-    cardHeader: {
-        fontSize: "clamp(18px, 5.5vw, 28px)",
-        margin: "0 0 0.3vh 0",
-        fontWeight: 800,
     },
     text: {
         fontSize: "clamp(15px, 4.2vw, 24px)",
         margin: 0,
         lineHeight: 1.4,
         color: "#333",
+        textAlign: "center",
     },
     arrowBox: {
         marginTop: "1vh",
@@ -248,8 +247,12 @@ const styles = {
         opacity: 0.8,
     },
     osBlock: {
-        textAlign: "left",
+        textAlign: "center",
         marginBottom: "1.2vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
     },
     subHeader: {
         fontSize: "clamp(15px, 4.5vw, 26px)",
@@ -259,6 +262,7 @@ const styles = {
         marginBottom: "0.4vh",
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
         gap: "6px",
     },
     inlineIcon: {
@@ -277,19 +281,23 @@ const styles = {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
         gap: "10px",
-        margin: "0.6vh 0 0.8vh 0",
+        margin: "0.8vh 0",
+        position: "relative",
     },
     orLine: {
-        flex: 1,
+        flexGrow: 1,
         height: "1px",
         backgroundColor: "#555",
         opacity: 0.6,
+        maxWidth: "30%",
     },
     orText: {
         fontSize: "clamp(14px, 3.2vw, 15px)",
         color: "#555",
         fontWeight: 600,
+        whiteSpace: "nowrap",
     },
     status: {
         fontSize: "clamp(16px, 3.8vw, 18px)",
