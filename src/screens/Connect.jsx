@@ -6,7 +6,7 @@ export default function Connect() {
     const [pingFailures, setPingFailures] = useState(0);
     const [connected, setConnected] = useState(false);
 
-    async function pingInternetOnce(timeoutMs = 2000) {
+    async function pingInternetOnce(timeoutMs = 2500) {
         try {
             const ctrl = new AbortController();
             const to = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -69,7 +69,7 @@ export default function Connect() {
                             {/* Step 1 Card */}
                             <div style={styles.instructionCard}>
                                 <p style={styles.text}>
-                                    Connect Wi-Fi 🛜 <b>floto_cam</b>
+                                    ⚙️ Settings → Connect 🛜 <b>floto_cam</b>
                                 </p>
                             </div>
 
