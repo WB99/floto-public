@@ -75,7 +75,7 @@ export default function Connect() {
 
         // both done pressed
         if (done1 && done2) {
-            if (!isOnline) {
+            if (isOnline) {
                 setStatus("⚠️ Connection error. Forget the network and try again");
                 setShowBlink(false);
                 // revert after 10s and reset buttons
