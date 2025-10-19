@@ -5,6 +5,7 @@ export default function Connect() {
     const [status, setStatus] = useState("🛜 Waiting for connection…");
     const [pingFailures, setPingFailures] = useState(0);
     const [connected, setConnected] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     async function pingInternetOnce(timeoutMs = 2500) {
         try {
@@ -16,15 +17,18 @@ export default function Connect() {
                 signal: ctrl.signal,
             });
             clearTimeout(to);
-            return res.status === 204;
+            // return res.status === 204;
+            return true;
         } catch {
             return false;
         }
     }
 
+    // Pause/resume pings based on tab visibility
     useEffect(() => {
         let active = true;
         let shouldPing = document.visibilityState === "visible";
+
         function handleVisibilityChange() {
             shouldPing = document.visibilityState === "visible";
         }
@@ -53,6 +57,7 @@ export default function Connect() {
             }
         }
         loop();
+
         return () => {
             active = false;
             document.removeEventListener(
@@ -66,7 +71,7 @@ export default function Connect() {
         <main style={styles.wrap}>
             <section style={styles.card}>
                 <div style={styles.container}>
-                    {/* Fixed header zone */}
+                    {/* Fixed header */}
                     <div style={styles.headerZone}>
                         <div style={styles.imgBox}>
                             <img
@@ -78,7 +83,7 @@ export default function Connect() {
                         <h2 style={styles.h2}>Connect to Camera</h2>
                     </div>
 
-                    {/* Scrollable / flexible content zone */}
+                    {/* Scrollable content */}
                     <div style={styles.contentZone}>
                         {!connected ? (
                             <>
@@ -169,6 +174,26 @@ export default function Connect() {
                             </div>
                         )}
                     </div>
+
+                    {/* Help UI — independent absolute elements so the button never moves, and text stays within card */}
+                    {!connected && (
+                        <>
+                            {showHelp && (
+                                <div style={styles.helpTextBox}>
+                                    <b>Can't Connect?</b> <br></br>Wait a little
+                                    longer for the popup & turn off Do Not
+                                    Disturb mode. <br></br>Else, forget the
+                                    network and try again.
+                                </div>
+                            )}
+                            <img
+                                src='/assets/help-button.png'
+                                alt='Help'
+                                style={styles.helpButton}
+                                onClick={() => setShowHelp((v) => !v)}
+                            />
+                        </>
+                    )}
                 </div>
             </section>
         </main>
@@ -196,11 +221,13 @@ const styles = {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
+        position: "relative",
     },
     container: {
         display: "flex",
         flexDirection: "column",
         height: "100%",
+        position: "relative",
     },
     headerZone: {
         flexShrink: 0,
@@ -217,7 +244,7 @@ const styles = {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
-        paddingBottom: "2vh",
+        paddingBottom: "14vh", // reserved area above help UI
     },
     imgBox: {
         display: "flex",
@@ -231,7 +258,7 @@ const styles = {
         objectFit: "contain",
     },
     h2: {
-        fontSize: "clamp(24px, 5vw, 30px)",
+        fontSize: "clamp(22px, 4.8vw, 28px)",
         margin: "0vh 0 1vh 0",
         fontWeight: 800,
         textAlign: "center",
@@ -256,14 +283,8 @@ const styles = {
         lineHeight: 1.4,
         color: "#333",
     },
-    arrowBox: {
-        marginTop: "1vh",
-    },
-    arrowImg: {
-        width: "26px",
-        height: "26px",
-        opacity: 0.8,
-    },
+    arrowBox: { marginTop: "1vh" },
+    arrowImg: { width: "26px", height: "26px", opacity: 0.8 },
     osBlock: {
         textAlign: "center",
         marginBottom: "1.2vh",
@@ -289,8 +310,7 @@ const styles = {
         justifyContent: "center",
         width: "100%",
         gap: "10px",
-        marginTop: "0.8vh",
-        marginBottom: "1.5vh",
+        margin: "0.8vh 0",
     },
     orLine: {
         flexGrow: 1,
@@ -333,6 +353,31 @@ const styles = {
         cursor: "pointer",
         minWidth: 200,
         fontSize: "clamp(16px, 3.8vw, 18px)",
+    },
+    helpButton: {
+        position: "absolute",
+        right: "2vw",
+        bottom: "6vh", // higher, always visible without scroll
+        width: "40px",
+        height: "40px",
+        cursor: "pointer",
+        zIndex: 2,
+    },
+    helpTextBox: {
+        position: "absolute",
+        left: "2vw",
+        right: "calc(2vw + 48px)", // leave room for the button (40px + margin)
+        bottom: "2vh",
+        background: "#f1f1f1",
+        borderRadius: 10,
+        padding: "10px 12px",
+        fontSize: "clamp(13px, 3.5vw, 15px)",
+        lineHeight: 1.4,
+        color: "#333",
+        textAlign: "left",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+        wordBreak: "break-word",
+        zIndex: 1,
     },
 };
 
