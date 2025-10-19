@@ -22,15 +22,12 @@ export default function Connect() {
         }
     }
 
-    // ping loop that pauses when tab not visible
     useEffect(() => {
         let active = true;
         let shouldPing = document.visibilityState === "visible";
-
         function handleVisibilityChange() {
             shouldPing = document.visibilityState === "visible";
         }
-
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         async function loop() {
@@ -52,117 +49,126 @@ export default function Connect() {
                         setStatus("🛜 Waiting for connection…");
                     }
                 }
-                await new Promise((r) => setTimeout(r, 1500)); // interval between pings
+                await new Promise((r) => setTimeout(r, 1500));
             }
         }
-
         loop();
-
         return () => {
             active = false;
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibilityChange
+            );
         };
     }, []);
 
     return (
         <main style={styles.wrap}>
             <section style={styles.card}>
-                <div style={connected ? styles.innerCenter : styles.inner}>
-                    <div style={styles.imgBox}>
-                        <img
-                            src="/assets/camera-wifi.png"
-                            alt="Camera Wi-Fi Icon"
-                            style={styles.singleImg}
-                        />
-                    </div>
-                    <h2 style={styles.h2}>Connect to Camera</h2>
-
-                    {!connected ? (
-                        <>
-                            {/* Step 1 Card */}
-                            <div style={styles.instructionCard}>
-                                <p style={styles.text}>
-                                    ⚙️ Settings → Connect 🛜 <b>floto_cam</b>
-                                </p>
-                            </div>
-
-                            <div style={styles.arrowBox}>
-                                <img
-                                    src="/assets/down-arrow.png"
-                                    alt="Down Arrow"
-                                    style={styles.arrowImg}
-                                />
-                            </div>
-
-                            {/* Step 2 Card */}
-                            <div style={styles.instructionCard}>
-                                <div style={styles.osBlock}>
-                                    <p style={styles.text}>
-                                        <img
-                                            src="/assets/apple-logo.png"
-                                            alt="Apple"
-                                            style={styles.inlineIcon}
-                                        />{" "}
-                                        Wait for popup
-                                        <br />
-                                        <img
-                                            src="/assets/click.png"
-                                            alt="Click"
-                                            style={styles.clickIcon}
-                                        />{" "}
-                                        “Use without Internet”
-                                    </p>
-                                </div>
-
-                                <div style={styles.orRow}>
-                                    <div style={styles.orLine}></div>
-                                    <span style={styles.orText}>OR</span>
-                                    <div style={styles.orLine}></div>
-                                </div>
-
-                                <div style={styles.osBlock}>
-                                    <p style={styles.text}>
-                                        <img
-                                            src="/assets/android-logo.png"
-                                            alt="Android"
-                                            style={styles.inlineIcon}
-                                        />{" "}
-                                        Wait for popup/notification
-                                        <br />
-                                        <img
-                                            src="/assets/click.png"
-                                            alt="Click"
-                                            style={styles.clickIcon}
-                                        />{" "}
-                                        "Connect”
-                                    </p>
-                                </div>
-                            </div>
-
-                            <p
-                                style={{
-                                    ...styles.status,
-                                    ...(status.includes("Connected")
-                                        ? styles.statusConnected
-                                        : styles.statusBlink),
-                                }}
-                            >
-                                {status}
-                            </p>
-                        </>
-                    ) : (
-                        <div style={styles.connectedCenterBlock}>
-                            <p style={styles.statusConnected}>{status}</p>
-                            <button
-                                onClick={() =>
-                                    window.open("http://floto.cam", "_blank")
-                                }
-                                style={styles.btn}
-                            >
-                                Launch Camera App
-                            </button>
+                <div style={styles.container}>
+                    {/* Fixed header zone */}
+                    <div style={styles.headerZone}>
+                        <div style={styles.imgBox}>
+                            <img
+                                src='/assets/camera-wifi.png'
+                                alt='Camera Wi-Fi Icon'
+                                style={styles.singleImg}
+                            />
                         </div>
-                    )}
+                        <h2 style={styles.h2}>Connect to Camera</h2>
+                    </div>
+
+                    {/* Scrollable / flexible content zone */}
+                    <div style={styles.contentZone}>
+                        {!connected ? (
+                            <>
+                                <p style={styles.text}>Follow these steps:</p>
+                                <div style={styles.instructionCard}>
+                                    <p style={styles.text}>
+                                        ⚙️ Settings → Connect 🛜 <b>floto_cam</b>
+                                    </p>
+                                </div>
+
+                                <div style={styles.arrowBox}>
+                                    <img
+                                        src='/assets/down-arrow.png'
+                                        alt='Down Arrow'
+                                        style={styles.arrowImg}
+                                    />
+                                </div>
+
+                                <div style={styles.instructionCard}>
+                                    <div style={styles.osBlock}>
+                                        <p style={styles.text}>
+                                            <img
+                                                src='/assets/apple-logo.png'
+                                                alt='Apple'
+                                                style={styles.inlineIcon}
+                                            />{" "}
+                                            Wait for popup
+                                            <br />
+                                            <img
+                                                src='/assets/click.png'
+                                                alt='Click'
+                                                style={styles.clickIcon}
+                                            />{" "}
+                                            “Use without Internet”
+                                        </p>
+                                    </div>
+
+                                    <div style={styles.orRow}>
+                                        <div style={styles.orLine}></div>
+                                        <span style={styles.orText}>OR</span>
+                                        <div style={styles.orLine}></div>
+                                    </div>
+
+                                    <div style={styles.osBlock}>
+                                        <p style={styles.text}>
+                                            <img
+                                                src='/assets/android-logo.png'
+                                                alt='Android'
+                                                style={styles.inlineIcon}
+                                            />{" "}
+                                            Wait for popup/notification
+                                            <br />
+                                            <img
+                                                src='/assets/click.png'
+                                                alt='Click'
+                                                style={styles.clickIcon}
+                                            />{" "}
+                                            "Connect”
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <p
+                                    style={{
+                                        ...styles.status,
+                                        ...(status.includes("Connected")
+                                            ? styles.statusConnected
+                                            : styles.statusBlink),
+                                    }}
+                                >
+                                    {status}
+                                </p>
+                            </>
+                        ) : (
+                            <div style={styles.connectedBlock}>
+                                <p style={styles.statusConnected}>{status}</p>
+                                <button
+                                    onClick={() =>
+                                        window.open(
+                                            "http://floto.cam",
+                                            "_blank"
+                                        )
+                                    }
+                                    style={styles.btn}
+                                >
+                                    Launch Camera App
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </section>
         </main>
@@ -180,7 +186,6 @@ const styles = {
         fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
         color: "#000",
         paddingTop: "2vh",
-        overflow: "visible",
     },
     card: {
         width: "92vw",
@@ -188,30 +193,31 @@ const styles = {
         background: "#fff",
         borderRadius: 20,
         boxShadow: "0 6px 24px rgba(0,0,0,.08)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflowY: "auto",
-        overflowX: "hidden",
-    },
-    inner: {
-        width: "100%",
-        height: "auto",
+        overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        padding: "3vw",
-        boxSizing: "border-box",
     },
-    innerCenter: {
-        width: "100%",
+    container: {
+        display: "flex",
+        flexDirection: "column",
         height: "100%",
+    },
+    headerZone: {
+        flexShrink: 0,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
-        textAlign: "center",
+        justifyContent: "flex-start",
+        paddingTop: "1vh",
+    },
+    contentZone: {
+        flex: 1,
+        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        paddingBottom: "2vh",
     },
     imgBox: {
         display: "flex",
@@ -226,7 +232,7 @@ const styles = {
     },
     h2: {
         fontSize: "clamp(24px, 5vw, 30px)",
-        margin: "0vh 0 0.5vh 0",
+        margin: "0vh 0 1vh 0",
         fontWeight: 800,
         textAlign: "center",
     },
@@ -249,7 +255,6 @@ const styles = {
         margin: 0,
         lineHeight: 1.4,
         color: "#333",
-        textAlign: "center",
     },
     arrowBox: {
         marginTop: "1vh",
@@ -265,7 +270,6 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
     },
     inlineIcon: {
         height: "1em",
@@ -285,8 +289,8 @@ const styles = {
         justifyContent: "center",
         width: "100%",
         gap: "10px",
-        margin: "0.8vh 0",
-        position: "relative",
+        marginTop: "0.8vh",
+        marginBottom: "1.5vh",
     },
     orLine: {
         flexGrow: 1,
@@ -307,22 +311,18 @@ const styles = {
         marginTop: "2vh",
         textAlign: "center",
     },
-    statusBlink: {
-        animation: "fadeBlink 1s infinite",
-    },
+    statusBlink: { animation: "fadeBlink 1s infinite" },
     statusConnected: {
         fontSize: "clamp(18px, 3.8vw, 20px)",
         fontWeight: 700,
         marginTop: "2vh",
     },
-    connectedCenterBlock: {
+    connectedBlock: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
-        height: "100%",
         gap: "2vh",
-        textAlign: "center",
+        marginTop: "3vh",
     },
     btn: {
         padding: "12px 20px",
