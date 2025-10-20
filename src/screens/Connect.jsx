@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 
 export default function Connect() {
-    const [status, setStatus] = useState("🛜 Waiting for connection…");
+    const [status, setStatus] = useState("");
     const [pingFailures, setPingFailures] = useState(0);
     const [connected, setConnected] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
 
-    async function pingInternetOnce(timeoutMs = 2500) {
+    async function pingInternetOnce(timeoutMs = 2000) {
         try {
             const ctrl = new AbortController();
             const to = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -17,8 +17,8 @@ export default function Connect() {
                 signal: ctrl.signal,
             });
             clearTimeout(to);
-            // return res.status === 204;
-            return true;
+            return res.status === 204;
+            // return true;
         } catch {
             return false;
         }
@@ -50,10 +50,10 @@ export default function Connect() {
                         });
                     } else {
                         setPingFailures(0);
-                        setStatus("🛜 Waiting for connection…");
+                        setStatus("");
                     }
                 }
-                await new Promise((r) => setTimeout(r, 1500));
+                await new Promise((r) => setTimeout(r, 2500));  // interval between pings
             }
         }
         loop();
@@ -90,7 +90,7 @@ export default function Connect() {
                                 <p style={styles.text}>Follow these steps:</p>
                                 <div style={styles.instructionCard}>
                                     <p style={styles.text}>
-                                        ⚙️ Settings → Connect 🛜 <b>floto_cam</b>
+                                        ⚙️ Go to Phone Settings <br></br>🛜 Connect to <b>"floto_cam"</b>
                                     </p>
                                 </div>
 
@@ -141,7 +141,7 @@ export default function Connect() {
                                                 alt='Click'
                                                 style={styles.clickIcon}
                                             />{" "}
-                                            "Connect”
+                                            "Always Connect” / <br></br> "Connect Anyway"
                                         </p>
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@ export default function Connect() {
                                     <b>Can't Connect?</b> <br></br>Wait a little
                                     longer for the popup & turn off Do Not
                                     Disturb mode. <br></br>Else, forget the
-                                    network and try again.
+                                    network and try again with another browser.
                                 </div>
                             )}
                             <img
