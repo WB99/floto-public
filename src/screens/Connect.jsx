@@ -90,7 +90,7 @@ export default function Connect() {
                                 <p style={styles.text}>Follow these steps:</p>
                                 <div style={styles.instructionCard}>
                                     <p style={styles.text}>
-                                        ⚙️ Go to Phone Settings <br></br>🛜 Connect to <b>"floto_cam"</b>
+                                        🛜 Find & connect to wifi <b>"floto_cam"</b>
                                     </p>
                                 </div>
 
