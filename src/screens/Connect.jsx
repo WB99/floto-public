@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 export default function Connect() {
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState("↩️ Return to this page once done");
     const [pingFailures, setPingFailures] = useState(0);
     const [connected, setConnected] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
@@ -50,10 +50,10 @@ export default function Connect() {
                         });
                     } else {
                         setPingFailures(0);
-                        setStatus("");
+                        setStatus("↩️ Return to this page once done");
                     }
                 }
-                await new Promise((r) => setTimeout(r, 2500));  // interval between pings
+                await new Promise((r) => setTimeout(r, 1500));  // interval between pings
             }
         }
         loop();
@@ -90,7 +90,7 @@ export default function Connect() {
                                 <p style={styles.text}>Follow these steps:</p>
                                 <div style={styles.instructionCard}>
                                     <p style={styles.text}>
-                                        🛜 Find & connect to wifi <b>"floto_cam"</b>
+                                        On your phone: ⚙️ Settings → <br></br>🛜 Wi-Fi → connect to <b>"floto_cam"</b>
                                     </p>
                                 </div>
 
@@ -105,35 +105,6 @@ export default function Connect() {
                                 <div style={styles.instructionCard}>
                                     <div style={styles.osBlock}>
                                         <p style={styles.text}>
-                                            <img
-                                                src='/assets/apple-logo.png'
-                                                alt='Apple'
-                                                style={styles.inlineIcon}
-                                            />{" "}
-                                            Wait for popup
-                                            <br />
-                                            <img
-                                                src='/assets/click.png'
-                                                alt='Click'
-                                                style={styles.clickIcon}
-                                            />{" "}
-                                            “Use without Internet”
-                                        </p>
-                                    </div>
-
-                                    <div style={styles.orRow}>
-                                        <div style={styles.orLine}></div>
-                                        <span style={styles.orText}>OR</span>
-                                        <div style={styles.orLine}></div>
-                                    </div>
-
-                                    <div style={styles.osBlock}>
-                                        <p style={styles.text}>
-                                            <img
-                                                src='/assets/android-logo.png'
-                                                alt='Android'
-                                                style={styles.inlineIcon}
-                                            />{" "}
                                             Wait for popup/notification
                                             <br />
                                             <img
@@ -141,7 +112,7 @@ export default function Connect() {
                                                 alt='Click'
                                                 style={styles.clickIcon}
                                             />{" "}
-                                            "Always Connect” / <br></br> "Connect Anyway"
+                                            <b>“Use without Internet”</b> <br></br> or <b>"Always Connect”</b> <br></br> or <b>"Connect Anyway"</b>
                                         </p>
                                     </div>
                                 </div>
@@ -312,26 +283,13 @@ const styles = {
         gap: "10px",
         margin: "0.8vh 0",
     },
-    orLine: {
-        flexGrow: 1,
-        height: "1px",
-        backgroundColor: "#555",
-        opacity: 0.6,
-        maxWidth: "30%",
-    },
-    orText: {
-        fontSize: "clamp(14px, 3.2vw, 15px)",
-        color: "#555",
-        fontWeight: 600,
-        whiteSpace: "nowrap",
-    },
     status: {
         fontSize: "clamp(16px, 3.8vw, 18px)",
         fontWeight: 600,
         marginTop: "2vh",
         textAlign: "center",
     },
-    statusBlink: { animation: "fadeBlink 1s infinite" },
+    statusBlink: { animation: "fadeBlink 1.5s infinite" },
     statusConnected: {
         fontSize: "clamp(18px, 3.8vw, 20px)",
         fontWeight: 700,
